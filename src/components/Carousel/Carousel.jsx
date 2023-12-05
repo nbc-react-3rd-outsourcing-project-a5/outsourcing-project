@@ -51,16 +51,24 @@ export default function Carousel() {
   const carouselImage = [
     {
       id: 1,
-      title: '축제1',
-      img: 'https://www.adobe.com/kr/creativecloud/photography/hub/guides/media_1a4ed903dd512735ac7c19d9d9c7c9e91598a1bb3.jpeg?width=750&format=jpeg&optimize=medium'
+      title: '남포동 크리스마스 축제',
+      img: 'https://mblogthumb-phinf.pstatic.net/MjAyMDExMzBfMjUz/MDAxNjA2NzQ2NzUzMDMz.4CF4ct9o0ZPIcMYDlEdyvWoHxC190eZ8SFMAYdvoa7wg.TQRY-0ElReUMQiF7i7OHZM6szH30Bc3XtbN9S2VxDTgg.JPEG.molli1108/SE-d9d0f7be-3f15-4ef9-944e-81a147698f8a.jpg?type=w800'
     },
-    { id: 2, title: '축제2', img: 'https://www.e-patentnews.com/imgdata/e-patentnews_com/202209/2022090300016624.jpg' },
+    {
+      id: 2,
+      title: '유성온천 크리스마스 축제',
+      img: 'https://img3.yna.co.kr/etc/inner/KR/2022/11/25/AKR20221125112900053_01_i_P4.jpg'
+    },
     {
       id: 3,
-      title: '축제3',
-      img: 'https://m.mariasarang.net/files/picture_xmas/happy-new-year-merry-christmas-new-hd.jpg'
+      title: '애버랜드 크리스마스 축제',
+      img: 'https://file.nspna.com/news/2022/12/19/20221219124055_610622_1.jpg'
     },
-    { id: 4, title: '축제4', img: 'https://i.pinimg.com/736x/97/56/dd/9756ddfff85d616c00686c672dea1d85.jpg' }
+    {
+      id: 4,
+      title: '롯데월드 크리스마스 축제',
+      img: 'https://adventure.lotteworld.com/image/2019/11/201911050241235701_1350.jpg'
+    }
   ];
 
   return (
@@ -130,7 +138,7 @@ const StSliderContainer = styled.div`
     & > h2 {
       font-size: 2rem;
       color: white;
-      padding: 40px;
+      padding: 140px;
     }
   }
 `;
