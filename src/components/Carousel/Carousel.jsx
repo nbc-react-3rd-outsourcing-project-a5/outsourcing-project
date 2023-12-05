@@ -26,7 +26,7 @@ function SamplePrevArrow(props) {
   return (
     <div
       className={className}
-      style={{ ...style, width: '20px', top: '50%', left: '3%', display: 'block' }}
+      style={{ ...style, width: '20px', top: '50%', left: '2%', display: 'block' }}
       onClick={onClick}
     />
   );
