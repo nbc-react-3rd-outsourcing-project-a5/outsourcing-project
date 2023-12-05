@@ -1,7 +1,7 @@
 ---
 name: "[feat/브랜치명] 기능명"
 about: 기능 관련
-title: ''
+title: "[feat/브랜치명] 기능명"
 labels: feat
 assignees: ''
 
