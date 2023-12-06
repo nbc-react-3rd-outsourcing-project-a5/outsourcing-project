@@ -35,7 +35,7 @@ export default function HomeContents() {
       <StContainer>
         {filteredData.map((item) => {
           return (
-            <StLink key={item.id} to={`/detail/${item.id}`}>
+            <StLink key={item.id} item={item} to={`/detail/${item.id}`}>
               <StContentsImgs src={item.img} alt="" />
               <StContentTitle>{item.title}</StContentTitle>
               <StContentContent>{item.content}</StContentContent>
