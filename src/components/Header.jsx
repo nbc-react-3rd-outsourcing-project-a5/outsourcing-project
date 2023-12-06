@@ -5,13 +5,13 @@ import styled from 'styled-components';
 const Header = () => {
   return (
     <StContainer>
-      <StyledHeader>
+      <StHeader>
         <StLogo>
           <Link to={'/'}>🎄윈터 원더랜드 가이드☃️</Link>
         </StLogo>
         <StDescription>🎅크리스마스까지 D-20🌟</StDescription>
         {/* <Nav /> */}
-      </StyledHeader>
+      </StHeader>
     </StContainer>
   );
 };
@@ -20,7 +20,7 @@ const StContainer = styled.section`
   width: 100%;
   border-bottom: 1px solid #e6e6e6;
 `;
-const StyledHeader = styled.header`
+const StHeader = styled.header`
   position: relative;
   max-width: 1160px;
   width: 100%;
