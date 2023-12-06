@@ -54,7 +54,7 @@ export default function HomeContents() {
 
 const StCategory = styled.div`
   display: flex;
-  margin-left: 50px;
+  margin-left: 120px;
 `;
 const StP = styled.p`
   margin-bottom: 20px;
@@ -76,10 +76,14 @@ const StContentsImgs = styled.img`
 
 const StContainer = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
 
   & > div {
+    padding: 5px;
     width: 400px;
+    margin-bottom: 20px;
   }
 `;
 
