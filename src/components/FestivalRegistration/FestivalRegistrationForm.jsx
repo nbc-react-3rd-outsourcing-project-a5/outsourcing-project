@@ -171,7 +171,13 @@ const StButton = styled.div`
     margin: 50px 0px 20px 0px;
     width: 10%;
 
+    transition: all 0.4s;
     cursor: pointer;
+
+    &:hover {
+      color: white;
+      background-color: #c21e1e;
+    }
   }
 `;
 

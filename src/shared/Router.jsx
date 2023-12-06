@@ -8,7 +8,7 @@ export default function Router() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/addFestival" element={<FestivalRegistration />} />
+          <Route path="/registration" element={<FestivalRegistration />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Route>
       </Routes>
