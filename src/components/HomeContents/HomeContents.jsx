@@ -67,11 +67,11 @@ const StP = styled.p`
 
 const StContentsImgs = styled.img`
   width: 100%;
-  height: 300px;
+  height: 250px;
   display: flex;
   align-items: center;
 
-  border-radius: 10px;
+  border-radius: 15px;
 `;
 
 const StContainer = styled.div`
