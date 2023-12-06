@@ -5,7 +5,7 @@ import 'fonts.css';
 const GlobalStyle = createGlobalStyle`
     ${reset}
     body {
-        font-family: 'omyu_pretty', sans-serif;
+        font-family: 'Pretendard', sans-serif;
     }
     *{
         box-sizing: border-box;
