@@ -1,8 +1,15 @@
+import { ko } from 'date-fns/locale';
 import React, { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import styled from 'styled-components';
 
 export default function FestivalRegistrationForm() {
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [imageArr, setImageArr] = useState([]);
+
+  //사진 여러 개 선택 (10개까지만)
   const handleImageUpload = (e) => {
     const fileArr = e.target.files;
 
@@ -24,41 +31,70 @@ export default function FestivalRegistrationForm() {
   };
   return (
     <StFestivalFormContainer>
-      <div>
-        <h2>축제 등록하기</h2>
-      </div>
+      <h2>축제 등록하기</h2>
       <StForm>
-        <div>
-          <p>업체 이름</p>
-          <input type="text" />
-        </div>
-        <div>
-          <p>축제 이름</p>
-          <input type="text" />
-        </div>
-        <div>
-          {/* 카카오 react-daum-postcode 패키지 이용하여 주소 검색 (보류)*/}
-          <p>주소</p>
-          <input type="text" />
-        </div>
-        <div>
-          {/* React Datepicker 라이브러리 사용 달력으로 날짜 선택 */}
-          <p>축제 날짜</p>
-          <input type="text" /> ~
-          <input type="text" />
-        </div>
-        <div>
-          <p>축제 설명</p>
-          <StDescription />
-        </div>
-        <div>
-          <input type="file" accept=".jpg, .png, .jpeg" multiple onChange={handleImageUpload} />
-        </div>
-        <div>
-          {imageArr?.map((image) => {
-            return <img src={image} alt="" />;
-          })}
-        </div>
+        <StDivision>
+          <div>
+            <div>
+              <StP>업체 이름</StP>
+              <StInput type="text" />
+            </div>
+            <div>
+              <StP>축제 이름</StP>
+              <StInput type="text" />
+            </div>
+            <div>
+              {/* 카카오 react-daum-postcode 패키지 이용하여 주소 검색 (보류)*/}
+              <StP>주소</StP>
+              <StInput type="text" />
+            </div>
+            <div>
+              {/* React Datepicker 라이브러리 사용 달력으로 날짜 선택 */}
+              <StP>축제 날짜</StP>
+              <StDate>
+                <div>
+                  <StDatePicker
+                    locale={ko}
+                    minDate={new Date()}
+                    dateFormat="yyyy년 MM월 dd일"
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    selectsStart
+                    startDate={startDate}
+                    endDate={endDate}
+                  />
+                </div>
+                ~
+                <div>
+                  <StDatePicker
+                    locale={ko}
+                    dateFormat="yyyy년 MM월 dd일"
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    selectsEnd
+                    startDate={startDate}
+                    endDate={endDate}
+                    minDate={startDate}
+                  />
+                </div>
+              </StDate>
+            </div>
+          </div>
+          <div>
+            이미지를 선택해주세요!! (최대 10개까지)
+            <div>
+              <input type="file" accept=".jpg, .png, .jpeg" multiple onChange={handleImageUpload} />
+            </div>
+            <StImageContainer>
+              {imageArr?.map((image) => {
+                return <StImage key={image} src={image} alt="이미지 미리보기" />;
+              })}
+            </StImageContainer>
+          </div>
+        </StDivision>
+        <StTextareaContainer>
+          <StDescription placeholder="당신이 개최하는 축제를 소개해주세요!" />
+        </StTextareaContainer>
         <StButton>
           <button type="submit">취소하기</button>
           <button type="submit">등록하기</button>
@@ -69,56 +105,99 @@ export default function FestivalRegistrationForm() {
 }
 
 const StFestivalFormContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  max-width: 1200px;
+  margin: 0px auto;
 
-  & > div > h2 {
+  & > div {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  & > h2 {
+    text-align: center;
     font-size: 2rem;
-    margin-bottom: 20px;
+    margin: 20px 0px;
   }
 `;
 
 const StForm = styled.form`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: stretch;
 
-  & > div {
+  & > div > div > div {
+    width: 100%;
     margin: 10px 0px;
-
-    & > img {
-      width: 100px;
-    }
-
-    & > input {
-      padding: 3px 5px;
-    }
-
-    & > p {
-      margin-bottom: 5px;
-    }
   }
 `;
 
+const StTextareaContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const StDescription = styled.textarea`
-  width: 100%;
-  height: 200px;
-  padding: 5px;
+  width: 72%;
+  height: 400px;
+  padding: 10px;
   resize: none;
+  outline: none;
+  border: none;
+  background-color: #d3d3d367;
+  border-radius: 10px;
+`;
+
+const StP = styled.p`
+  font-size: large;
+  margin-bottom: 5px;
+`;
+
+const StInput = styled.input`
+  padding: 5px;
+  outline: none;
 `;
 
 const StButton = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
 
   & > button {
     border: none;
     border-radius: 10px;
-    padding: 10px;
+    padding: 15px;
+    margin: 50px 0px 20px 0px;
+    width: 10%;
 
     cursor: pointer;
   }
+`;
+
+const StDatePicker = styled(DatePicker)`
+  font-size: small;
+  width: 180px;
+  text-align: center;
+  padding: 5px;
+`;
+
+const StDate = styled.div`
+  display: flex;
+  gap: 40px;
+`;
+
+const StDivision = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+`;
+
+const StImage = styled.img`
+  width: 100px;
+  object-fit: cover;
+`;
+
+const StImageContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 `;
