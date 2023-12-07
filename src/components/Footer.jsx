@@ -4,14 +4,14 @@ import styled from 'styled-components';
 const Footer = () => {
   return (
     <>
-      <Container>
+      <StContainer>
         <p>ⓒ 2023. 원터 원더랜드 가이드. All rights reserved.</p>
-      </Container>
+      </StContainer>
     </>
   );
 };
 
-const Container = styled.section`
+const StContainer = styled.section`
   width: 100%;
   height: 60px;
   text-align: center;
