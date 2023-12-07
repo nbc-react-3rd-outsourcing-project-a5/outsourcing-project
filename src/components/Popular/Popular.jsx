@@ -4,6 +4,7 @@ import Slider from 'react-slick';
 import popularData from './popularData.json';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
+import StContainer from 'components/common/StContainer';
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -67,16 +68,6 @@ export default function Popular() {
     </StContainer>
   );
 }
-
-const StContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 1160px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 20px;
-  gap: 12px;
-`;
 
 const StTitle = styled.div`
   font-size: 1.4rem;
