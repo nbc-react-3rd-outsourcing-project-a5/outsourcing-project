@@ -14,7 +14,7 @@ const Header = () => {
               <Link to={'/'}>윈터 원더랜드 가이드☃️</Link>
             </StLogo>
             <StNav>
-              <StToMapLink to={'/map'}>
+              <StToMapLink to={'/search'}>
                 <svg width="12" height="12" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                   <path
                     fill="#ffffff"
@@ -24,8 +24,8 @@ const Header = () => {
                 </svg>
                 내 주변 축제
               </StToMapLink>
-              <StSignupLink to={'/signup'}>회원가입</StSignupLink>
-              <StLoginLink to={'/login'}>로그인</StLoginLink>
+              <StSignupLink to={'/auth'}>회원가입</StSignupLink>
+              <StLoginLink to={'/auth'}>로그인</StLoginLink>
             </StNav>
           </StHeader>
         </StContainer>
