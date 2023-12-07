@@ -1,4 +1,5 @@
 import { fakeData } from 'components/Carousel/Carousel';
+import StContainer from 'components/common/StContainer';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
@@ -15,7 +16,7 @@ export default function HomeContents() {
     : fakeData.filter((item) => !item.isDone);
 
   return (
-    <>
+    <StContainer>
       <StCategory>
         <StP
           $color={selectedCategory ? 'black' : '#888'}
@@ -32,7 +33,7 @@ export default function HomeContents() {
           진행예정
         </StP>
       </StCategory>
-      <StContainer>
+      <StList>
         {filteredData.map((item) => {
           return (
             <StLink key={item.id} item={item} to={`/detail/${item.id}`}>
@@ -42,14 +43,13 @@ export default function HomeContents() {
             </StLink>
           );
         })}
-      </StContainer>
-    </>
+      </StList>
+    </StContainer>
   );
 }
 
 const StCategory = styled.div`
   display: flex;
-  max-width: 1160px;
   margin: 80px auto 20px;
 `;
 const StP = styled.p`
@@ -69,13 +69,10 @@ const StContentsImgs = styled.img`
 
   border-radius: 15px;
 `;
-
-const StContainer = styled.div`
+const StList = styled.div`
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
-  max-width: 1160px;
   width: 100%;
   margin: 0 auto;
 `;
@@ -83,9 +80,10 @@ const StContainer = styled.div`
 const StLink = styled(Link)`
   width: calc(33.3333% - 10px);
 `;
+
 const StContentTitle = styled.div`
   margin-top: 8px;
-  font-size: xx-large;
+  font-size: 18px;
 `;
 
 const StContentContent = styled.div`
@@ -99,5 +97,5 @@ const StContentContent = styled.div`
   text-overflow: ellipsis;
   text-align: justify;
 
-  font-size: x-large;
+  font-size: 16px;
 `;

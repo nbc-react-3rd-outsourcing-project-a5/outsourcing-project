@@ -10,6 +10,10 @@ const GlobalStyle = createGlobalStyle`
     *{
         box-sizing: border-box;
     }
+    a {
+        text-decoration: unset;
+        color: #111;
+    }
 `;
 
 export default GlobalStyle;
