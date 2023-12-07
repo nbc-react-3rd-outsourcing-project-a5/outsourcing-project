@@ -6,8 +6,10 @@ const Header = () => {
   return (
     <StContainer>
       <StHeader>
-        <Logo>🎄윈터 원더랜드 가이드☃️</Logo>
-        <Description>🎅크리스마스까지 D-20🌟</Description>
+        <StLogo>
+          <Link to={'/'}>🎄윈터 원더랜드 가이드☃️</Link>
+        </StLogo>
+        <StDescription>🎅크리스마스까지 D-20🌟</StDescription>
         {/* <Nav /> */}
       </StHeader>
     </StContainer>
@@ -25,11 +27,11 @@ const StHeader = styled.header`
   margin: 0 auto;
   padding: 20px;
 `;
-const Logo = styled.h1`
+const StLogo = styled.h1`
   font-size: 18px;
 `;
 
-const Description = styled.p`
+const StDescription = styled.p`
   position: absolute;
   top: 50%;
   left: 50%;
