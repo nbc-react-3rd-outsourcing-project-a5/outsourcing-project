@@ -1,6 +1,8 @@
 import { fakeData } from 'components/Carousel/Carousel';
+import StContainer from 'components/common/StContainer';
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import styled, { css } from 'styled-components';
 
 export default function HomeContents() {
   const [selectedCategory, setSeletedCategory] = useState(false);
@@ -14,54 +16,48 @@ export default function HomeContents() {
     : fakeData.filter((item) => !item.isDone);
 
   return (
-    <>
+    <StContainer>
       <StCategory>
         <StP
-          $marginLeft="0px"
           $color={selectedCategory ? 'black' : '#888'}
-          $textDecoration={selectedCategory ? 'underline' : 'none'}
+          $fontWeight={selectedCategory ? 'bold' : 'normal'}
           onClick={handleChangedCategory}
         >
           진행중
         </StP>
         <StP
-          $marginLeft="30px"
           $color={selectedCategory ? '#888' : 'black'}
-          $textDecoration={selectedCategory ? 'none' : 'underline'}
+          $fontWeight={selectedCategory ? 'normal' : 'bold'}
           onClick={handleChangedCategory}
         >
           진행예정
         </StP>
       </StCategory>
-      <StContainer>
+      <StList>
         {filteredData.map((item) => {
           return (
-            <div>
-              <div>
-                <div>
-                  <StContentsImgs width="300px" src={item.img} alt="" />
-                </div>
-              </div>
+            <StLink key={item.id} item={item} to={`/detail/${item.id}`}>
+              <StContentsImgs src={item.img} alt="" />
               <StContentTitle>{item.title}</StContentTitle>
               <StContentContent>{item.content}</StContentContent>
-            </div>
+            </StLink>
           );
         })}
-      </StContainer>
-    </>
+      </StList>
+    </StContainer>
   );
 }
 
 const StCategory = styled.div`
   display: flex;
-  margin-left: 120px;
+  margin: 80px auto 20px;
 `;
 const StP = styled.p`
-  margin-bottom: 20px;
-  margin-left: ${(props) => props.$marginLeft};
+  padding: 0 20px 10px;
   color: ${(props) => props.$color};
-  font-size: xx-large;
+  font-size: 20px;
   text-decoration: ${(props) => props.$textDecoration};
+  font-weight: ${(props) => props.$fontWeight};
   cursor: pointer;
 `;
 
@@ -73,23 +69,17 @@ const StContentsImgs = styled.img`
 
   border-radius: 15px;
 `;
-
-const StContainer = styled.div`
+const StList = styled.div`
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
-  gap: 20px;
-
-  & > div {
-    padding: 5px;
-    width: 400px;
-    margin-bottom: 20px;
-  }
+  gap: 10px;
 `;
-
+const StLink = styled(Link)`
+  width: calc(33.3333% - 10px);
+`;
 const StContentTitle = styled.div`
   margin-top: 8px;
-  font-size: xx-large;
+  font-size: 18px;
 `;
 
 const StContentContent = styled.div`
@@ -103,5 +93,5 @@ const StContentContent = styled.div`
   text-overflow: ellipsis;
   text-align: justify;
 
-  font-size: x-large;
+  font-size: 16px;
 `;

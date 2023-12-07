@@ -3,7 +3,8 @@ import styled from 'styled-components';
 const StContainer = styled.div`
   max-width: 1200px;
   width: 100%;
-  margin: 0 20px;
+  padding: 0 20px;
+  margin: 0 auto;
 `;
 
 export default StContainer;
