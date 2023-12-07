@@ -71,11 +71,12 @@ export default function Popular() {
 const StContainer = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 1160px;
+  max-width: 1200px;
   width: 100%;
   margin: 0 auto;
   padding: 20px;
   gap: 12px;
+  outline: none;
 `;
 
 const StTitle = styled.div`
@@ -121,7 +122,7 @@ const StImageBox = styled.div`
 
   & img {
     width: 100%;
-    height: 300px;
+    height: 280px;
     object-fit: cover;
   }
 `;
