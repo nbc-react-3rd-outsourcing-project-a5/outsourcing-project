@@ -1,22 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
+import VwContainer from './common/VwContainer';
+import StContainer from './common/StContainer';
 
 const Footer = () => {
   return (
-    <>
+    <VwContainer backgroundColor="#126136">
       <StContainer>
-        <p>ⓒ 2023. 원터 원더랜드 가이드. All rights reserved.</p>
+        <Stp>ⓒ 2023. 원터 원더랜드 가이드. All rights reserved.</Stp>
       </StContainer>
-    </>
+    </VwContainer>
   );
 };
 
-const StContainer = styled.section`
-  width: 100%;
-  height: 60px;
+const Stp = styled.p`
   text-align: center;
-  line-height: 60px;
+  padding: 20px 0;
   color: #fff;
-  background: #c21e1e;
 `;
 export default Footer;
