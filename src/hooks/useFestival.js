@@ -12,6 +12,7 @@ import {
 export const useFestival = (method = null) => {
   const dispatch = useDispatch();
   const { error, isError, targertFestival, snapshotFestivals } = useSelector((state) => state.festivalSlice);
+
   useEffect(() => {
     if (isError) {
       console.error('커스텀 훅 에러');

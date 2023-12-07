@@ -1,16 +1,18 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { doc, addDoc, getDocs, getDoc, updateDoc, deleteDoc, collection } from 'firebase/firestore';
+import { doc, setDoc, getDocs, getDoc, updateDoc, deleteDoc, collection } from 'firebase/firestore';
 import { festivalRef, db } from 'fb/firebase';
 /**
  * CREATE
  * 축제 생성하기 가져오기
  * payload : 축제 데이터
  */
-export const __createFestival = createAsyncThunk('createFestival', async (festivalData, thunkAPI) => {
+export const __createFestival = createAsyncThunk('createFestival', async (newFestivalData, thunkAPI) => {
   try {
-    const docRef = await addDoc(festivalRef, festivalData);
-    console.log(docRef.id);
-    return thunkAPI.fulfillWithValue(festivalData);
+    const { docID, data } = newFestivalData;
+    const docRef = doc(db, 'festival', docID);
+    await setDoc(docRef, data);
+
+    return thunkAPI.fulfillWithValue(docID);
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
   }
@@ -113,7 +115,8 @@ export const festivalSlice = createSlice({
       .addCase(__createFestival.fulfilled, (state, action) => {
         state.isLoading = false;
         // TODO : 파일 생성 후 로직
-        // state.test.push(action.payload);
+        console.log('업로드 성공');
+        console.log(action.payload);
       })
       .addCase(__createFestival.rejected, (state, action) => {
         state.isLoading = false;

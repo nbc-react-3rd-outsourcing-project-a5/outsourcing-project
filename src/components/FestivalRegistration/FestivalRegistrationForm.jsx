@@ -1,18 +1,13 @@
 import { ko } from 'date-fns/locale';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styled from 'styled-components';
-import { useFestival } from 'hooks/useFestival';
-import { useInput, useDate, useImageFile } from 'hooks';
+import { useInput, useDate, useImageFile, useFestival } from 'hooks';
 import uuid from 'react-uuid';
-
+import { uploadFiles } from 'utils/fireStorage';
 export default function FestivalRegistrationForm() {
-  // const [startDate, setStartDate] = useState(new Date());
-  // const [endDate, setEndDate] = useState(new Date());
-
-  // =========================
-  // TODO : 회원의 정보를 받아와서 이름값 넘겨주기
+  // TODO : organizer 정보 가져오기
   const organizer = { id: '123123', name: '우당탕탕' };
   const [name, handleChangeName] = useInput();
   const [address, handleChangeAddress] = useInput();
@@ -21,33 +16,40 @@ export default function FestivalRegistrationForm() {
   const [endDate, handleChangeEndDate] = useDate();
   const [localImageFiles, handleUploadImageFiles] = useImageFile();
 
-  const { targertFestival, snapshotFestivals } = useFestival();
   const handleCreate = useFestival('create');
-  const [data2, handle2] = useFestival('get');
-  const handle4 = useFestival('update');
 
-  // const [data3, handle3] = useFestival('getQuery');
-  // const handle5 = useFestival('delete');
-  // =========================
+  // TODO : 수정하기에서 사용할 것
+  // const [data2, handle2] = useFestival('get');
+  // const handle4 = useFestival('update');
 
-  const handleSummit = (e) => {
+  const handleSummit = async (e) => {
     e.preventDefault();
+    const docID = uuid();
 
-    //TODO : 스토리지 업로드 후 스토리지 아이디랑 url 받아서 image에 넣기
-    const data = {
-      name,
-      organizerID: organizer.id,
-      address,
-      description,
-      startDate,
-      endDate,
-      image: [],
-      overlayType: null,
-      overlay: []
+    const image = await uploadFiles(
+      'festival',
+      docID,
+      localImageFiles.map((n) => n.file)
+    );
+
+    //TODO : 빈 데이터 추가하기
+    // overlayType, overlay, organizerID
+    const newFestival = {
+      docID,
+      data: {
+        name,
+        organizerID: organizer.id,
+        address,
+        description,
+        startDate,
+        endDate,
+        image,
+        overlayType: null,
+        overlay: []
+      }
     };
 
-    console.log(data);
-    handleCreate(data);
+    handleCreate(newFestival);
   };
 
   return (
