@@ -11,7 +11,8 @@ export default function Router() {
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
           <Route path="/registration" element={<FestivalRegistration />} />
+        </Route>
       </Routes>
-      </BrowserRouter>
+    </BrowserRouter>
   );
 }
