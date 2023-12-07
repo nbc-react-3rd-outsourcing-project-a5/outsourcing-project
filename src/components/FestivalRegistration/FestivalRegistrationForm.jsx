@@ -1,52 +1,75 @@
 import { ko } from 'date-fns/locale';
-import React, { useState } from 'react';
+import React from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styled from 'styled-components';
-
+import { useInput, useDate, useImageFile, useFestival } from 'hooks';
+import uuid from 'react-uuid';
+import { uploadFiles } from 'utils/fireStorage';
 export default function FestivalRegistrationForm() {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [imageArr, setImageArr] = useState([]);
+  // TODO : organizer 정보 가져오기
+  const organizer = { id: '123123', name: '우당탕탕' };
+  const [name, handleChangeName] = useInput();
+  const [address, handleChangeAddress] = useInput();
+  const [description, handleChangeDescription] = useInput();
+  const [startDate, handleChangeStartDate] = useDate();
+  const [endDate, handleChangeEndDate] = useDate();
+  const [localImageFiles, handleUploadImageFiles] = useImageFile();
 
-  //사진 여러 개 선택 (10개까지만)
-  const handleImageUpload = (e) => {
-    const fileArr = e.target.files;
+  const handleCreate = useFestival('create');
 
-    let fileURLs = [];
-    let file;
-    let filesLength = fileArr.length > 10 ? 10 : fileArr.length;
+  // TODO : 수정하기에서 사용할 것
+  // const [data2, handle2] = useFestival('get');
+  // const handle4 = useFestival('update');
 
-    for (let i = 0; i < filesLength; i++) {
-      file = fileArr[i];
+  const handleSummit = async (e) => {
+    e.preventDefault();
+    const docID = uuid();
 
-      let reader = new FileReader();
-      reader.onload = () => {
-        console.log(reader.result);
-        fileURLs[i] = reader.result;
-        setImageArr([...fileURLs]);
-      };
-      reader.readAsDataURL(file);
-    }
+    const image = await uploadFiles(
+      'festival',
+      docID,
+      localImageFiles.map((n) => n.file)
+    );
+
+    //TODO : 빈 데이터 추가하기
+    // overlayType, overlay, organizerID
+    const newFestival = {
+      docID,
+      data: {
+        name,
+        organizerID: organizer.id,
+        address,
+        description,
+        startDate,
+        endDate,
+        image,
+        overlayType: null,
+        overlay: []
+      }
+    };
+
+    handleCreate(newFestival);
   };
+
   return (
     <StFestivalFormContainer>
       <h2>축제 등록하기</h2>
-      <StForm>
+      <StForm onSubmit={handleSummit}>
         <StDivision>
           <div>
             <div>
               <StP>업체 이름</StP>
-              <StInput type="text" />
+              <StInput type="text" defaultValue={organizer.name} readOnly />
             </div>
             <div>
               <StP>축제 이름</StP>
-              <StInput type="text" />
+              <StInput type="text" value={name} onChange={handleChangeName} />
             </div>
             <div>
               {/* 카카오 react-daum-postcode 패키지 이용하여 주소 검색 (보류)*/}
               <StP>주소</StP>
-              <StInput type="text" />
+              <StInput type="text" value={address} onChange={handleChangeAddress} />
             </div>
             <div>
               {/* React Datepicker 라이브러리 사용 달력으로 날짜 선택 */}
@@ -58,7 +81,7 @@ export default function FestivalRegistrationForm() {
                     minDate={new Date()}
                     dateFormat="yyyy년 MM월 dd일"
                     selected={startDate}
-                    onChange={(date) => setStartDate(date)}
+                    onChange={(date) => handleChangeStartDate(date)}
                     selectsStart
                     startDate={startDate}
                     endDate={endDate}
@@ -70,7 +93,7 @@ export default function FestivalRegistrationForm() {
                     locale={ko}
                     dateFormat="yyyy년 MM월 dd일"
                     selected={endDate}
-                    onChange={(date) => setEndDate(date)}
+                    onChange={(date) => handleChangeEndDate(date)}
                     selectsEnd
                     startDate={startDate}
                     endDate={endDate}
@@ -83,17 +106,21 @@ export default function FestivalRegistrationForm() {
           <div>
             이미지를 선택해주세요!! (최대 10개까지)
             <div>
-              <input type="file" accept=".jpg, .png, .jpeg" multiple onChange={handleImageUpload} />
+              <input type="file" accept=".jpg, .png, .jpeg, .webp" multiple onChange={handleUploadImageFiles} />
             </div>
             <StImageContainer>
-              {imageArr?.map((image) => {
-                return <StImage key={image} src={image} alt="이미지 미리보기" />;
+              {localImageFiles?.map((image) => {
+                return <StImage key={uuid()} src={image.preview} alt="이미지 미리보기" />;
               })}
             </StImageContainer>
           </div>
         </StDivision>
         <StTextareaContainer>
-          <StDescription placeholder="당신이 개최하는 축제를 소개해주세요!" />
+          <StDescription
+            placeholder="당신이 개최하는 축제를 소개해주세요!"
+            value={description}
+            onChange={handleChangeDescription}
+          />
         </StTextareaContainer>
         <StButton>
           <button type="submit">취소하기</button>

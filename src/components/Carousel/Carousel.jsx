@@ -185,6 +185,7 @@ export default function Carousel() {
 const StSlider = styled(Slider)`
   width: 100%;
   height: 100%;
+  margin-top: 66px;
   .silck-list {
     margin: 0 auto;
     overflow-x: hidden;
@@ -224,7 +225,6 @@ const StSliderContainer = styled.div`
   & > div {
     width: 100%;
     height: 500px;
-
     background-image: linear-gradient(rgba(0, 0, 0, 0.215), rgba(0, 0, 0, 0.281)), url(${(props) => props.$src});
     background-position: center;
     background-size: cover;

@@ -8,10 +8,6 @@ export default function SearchForm() {
   const [startDate, setStartDate] = useState(new Date('2014/02/08'));
   const [endDate, setEndDate] = useState(null);
 
-  const handleChange = ([newStartDate, newEndDate]) => {
-    setStartDate(newStartDate);
-    setEndDate(newEndDate);
-  };
   return (
     <StContainer>
       {/* 1. form 태그 -> onSubmit */}
