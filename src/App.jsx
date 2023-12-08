@@ -8,6 +8,8 @@ import GlobalStyle from 'styles/GlobalStyle';
 import theme from 'styles/theme';
 import { collection, getDocs } from '@firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const dispatch = useDispatch();
@@ -39,6 +41,19 @@ function App() {
     <>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          limit={3}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         <Router />
       </ThemeProvider>
     </>
