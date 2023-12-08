@@ -21,7 +21,7 @@ export default function Login({
   const handleCheckPwOnchange = (e) => setCheckPassword(e.target.value);
   const handlePhoneOnchange = (e) => setPhoneNumber(e.target.value);
   return (
-    <form>
+    <form onSubmit={handler}>
       {switchLogin ? (
         <>
           <div>
@@ -73,9 +73,7 @@ export default function Login({
         ''
       )}
       <div>
-        <StBtn onClick={handler} type="submit">
-          {switchLogin ? '가입하기' : '로그인'}
-        </StBtn>
+        <StBtn type="submit">{switchLogin ? '가입하기' : '로그인'}</StBtn>
       </div>
     </form>
   );
