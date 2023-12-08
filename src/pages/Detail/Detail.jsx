@@ -151,12 +151,17 @@ const StImgSlider = styled(Slider)`
   height: 258px;
   margin-bottom: 100px;
   .slick-track {
-    display: flex !important;
-    gap: 10px !important;
+    display: flex;
+    gap: 10px;
   }
   .silck-list {
     margin: 0 auto;
     overflow-x: hidden;
+  }
+  .slick-slide img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
   }
   .slick-dots {
     margin-bottom: 50px;

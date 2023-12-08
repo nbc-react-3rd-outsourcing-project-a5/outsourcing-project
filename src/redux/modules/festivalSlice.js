@@ -137,8 +137,7 @@ export const festivalSlice = createSlice({
       })
       .addCase(__getQueryFestivals.fulfilled, (state, action) => {
         if (action.payload) {
-          const serializedData = action.payload;
-          state.snapshotFestivals = serializedData;
+          state.snapshotFestivals = action.payload;
           state.isLoading = false;
         }
       })
@@ -153,9 +152,7 @@ export const festivalSlice = createSlice({
       })
       .addCase(__getFestival.fulfilled, (state, action) => {
         state.isLoading = false;
-        const serializedData = action.payload;
-        state.targetFestival = serializedData;
-        console.log('action.payload : ', action.payload);
+        state.targetFestival = action.payload;
       })
       .addCase(__getFestival.rejected, (state, action) => {
         state.isLoading = false;

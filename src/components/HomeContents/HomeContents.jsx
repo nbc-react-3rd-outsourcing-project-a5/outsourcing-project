@@ -21,42 +21,24 @@ export default function HomeContents() {
     };
 
     fetchFestivals();
-    // 진행중, 진행예정 분류
-    isOncoming();
   }, []);
 
-  const isOncoming = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1; // Adding 1 to get the actual month (1-12)
-    const day = today.getDate();
-
-    festival.snapshotData.forEach((item) => {
-      const startDate = new Date(item.startDate);
-      const todayDate = new Date(`${year}. ${month}. 6.`);
-
-      console.log(`${startDate} is startDate.`);
-      console.log(`${todayDate} is todayDate.`);
-
-      if (startDate > todayDate) {
-        console.log(`${item.name} is in the future.`);
-      } else if (startDate <= todayDate) {
-        console.log(`${item.name} is in progress or today.`);
-      }
-    });
-  };
-
+  // 진행중, 진행예정 클릭시 전환
   const handleChangedCategory = (value) => {
     if (value !== oncoming) {
       setOncoming(value);
     }
   };
 
+  // 진행중, 진행예정 클릭시 전환
   const filterFestivalsByDate = (festivals, isOncoming) => {
+    // 오늘 날짜
     const today = new Date();
 
     return festivals.filter((item) => {
+      // 축제 각각 날짜
       const startDate = new Date(item.startDate);
+      // 축제 진행중, 진행예정
       return isOncoming ? startDate <= today : startDate > today;
     });
   };
@@ -106,7 +88,7 @@ const StCategory = styled.div`
 const StP = styled.p`
   padding-right: 20px;
   color: ${(props) => props.$color};
-  font-size: 20px;
+  font-size: 24px;
   text-decoration: ${(props) => props.$textDecoration};
   font-weight: ${(props) => props.$fontWeight};
   cursor: pointer;
@@ -144,13 +126,19 @@ const StLocation = styled.p`
 
 const StContentTitle = styled.h2`
   margin-top: 8px;
-  font-size: 20px;
+  margin-left: 2px;
+  font-size: 18px;
   font-weight: bold;
+  white-space: nowrap; /* 텍스트가 한 줄로만 표시되도록 설정 */
+  overflow: hidden; /* 넘치는 부분은 숨김 처리 */
+  text-overflow: ellipsis; /* 말줄임표 적용 */
 `;
 
 const StContentContent = styled.div`
   margin-top: 8px;
+  margin-left: 2px;
   margin-bottom: 24px;
+  font-size: 14px;
   color: #777;
 
   display: -webkit-box;
@@ -160,6 +148,4 @@ const StContentContent = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: justify;
-
-  font-size: 16px;
 `;
