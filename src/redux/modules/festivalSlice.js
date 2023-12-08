@@ -24,16 +24,24 @@ export const __createFestival = createAsyncThunk('createFestival', async (newFes
  * payload : 축제 query
  */
 export const __getQueryFestivals = createAsyncThunk('getAllFestivals', async (query, thunkAPI) => {
-  // query에 대한 공식문서: https://firebase.google.com/docs/firestore/query-data/queries?hl=ko&authuser=0
-  // collection(): 특정 컬렉션 고르기
-  // where(): 지정된 필드에 대한 조건 지정
-  // orderBy(): 지정된 필드를 기준으로 정렬
-  // limit(): 가져올 문서의 최대 개수 지정
   try {
-    const q = query(festivalRef, query);
-    const querySnapshot = await getDocs(q);
-    return thunkAPI.fulfillWithValue(querySnapshot);
+    const querySnapshot = await getDocs(query);
+    const data = querySnapshot.docs.map((doc) => {
+      const docID = doc.id;
+      const data = doc.data();
+      return { docID, ...data };
+    });
+
+    const serializedData = data.map((item) => ({
+      ...item,
+      // 타임스탬프 > 날짜 > 문자로 변경
+      startDate: item.startDate.toDate().toLocaleDateString(),
+      endDate: item.endDate.toDate().toLocaleDateString()
+    }));
+    return serializedData;
   } catch (error) {
+    console.error('Error fetching festivals:', error);
+
     return thunkAPI.rejectWithValue(error);
   }
 });
@@ -50,10 +58,10 @@ export const __getFestival = createAsyncThunk('getFestival', async (festivalID, 
     const docSnap = await getDoc(docRef);
     const docData = docSnap.data();
     if (docData?.startDate) {
-      docData.startDate = String(docData.startDate.toDate());
-      docData.endDate = String(docData.endDate.toDate());
+      docData.startDate = docData.startDate.toDate().toLocaleDateString();
+      docData.endDate = docData.endDate.toDate().toLocaleDateString();
     }
-    return docSnap.exists() && thunkAPI.fulfillWithValue(docData);
+    return thunkAPI.fulfillWithValue(docData);
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
   }
@@ -94,8 +102,8 @@ const initialState = {
   isLoading: false,
   isError: false,
   error: null,
-  snapshotFestivals: null,
-  targertFestival: null
+  snapshotFestivals: [],
+  targetFestival: []
 };
 
 export const festivalSlice = createSlice({
@@ -128,8 +136,10 @@ export const festivalSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(__getQueryFestivals.fulfilled, (state, action) => {
-        state.isLoading = false;
-        console.log(action.payload);
+        if (action.payload) {
+          state.snapshotFestivals = action.payload;
+          state.isLoading = false;
+        }
       })
       .addCase(__getQueryFestivals.rejected, (state, action) => {
         state.isLoading = false;
@@ -142,7 +152,7 @@ export const festivalSlice = createSlice({
       })
       .addCase(__getFestival.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.targertFestival = action.payload;
+        state.targetFestival = action.payload;
       })
       .addCase(__getFestival.rejected, (state, action) => {
         state.isLoading = false;
