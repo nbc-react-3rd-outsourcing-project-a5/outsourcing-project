@@ -28,13 +28,11 @@ export default function OrganizerLogin() {
     if (switchLogin) {
       if (!email || !password || !userName || !checkPassword) {
         toast.warning('빈 칸 없이 입력해주세요!');
-        // alert('빈 칸 없이 입력해주세요!');
         return;
       }
     } else {
       if (!email || !password) {
         toast.warning('이메일 또는 비밀번호를 입력해주세요!');
-        // alert('이메일 또는 비밀번호를 입력해주세요!');
         return;
       }
     }
