@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import StContainer from 'components/common/StContainer';
 import styled from 'styled-components';
-function KakaoMap({ kakaoMapRef, kakaoMap }) {
+function KakaoMap({ kakaoMapRef, kakaoMap, isReady, setIsReady }) {
   const scriptSrc = '//dapi.kakao.com/v2/maps/sdk.js';
-  const [hasLoaded, setHasLoaded] = useState(false);
+  // const [hasLoaded, setHasLoaded] = useState(false);
 
   // 카카오맵 API script load Effect
   useEffect(() => {
@@ -16,24 +16,24 @@ function KakaoMap({ kakaoMapRef, kakaoMap }) {
 
       kakaoMapScript.addEventListener('load', () => {
         window.kakao.maps.load(() => {
-          setHasLoaded(true);
+          setIsReady(true);
         });
       });
     } else {
-      setHasLoaded(true);
+      setIsReady(true);
     }
   }, []);
 
   // 카카오맵 생성 Effect
   useEffect(() => {
-    if (hasLoaded) {
+    if (isReady) {
       const defaultOption = {
         center: new window.kakao.maps.LatLng(33.450701, 126.570667),
         level: 3
       };
       kakaoMap.current = new window.kakao.maps.Map(kakaoMapRef.current, defaultOption);
     }
-  }, [hasLoaded]);
+  }, [isReady]);
 
   return (
     <StContainer>
