@@ -3,8 +3,25 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import StContainer from './common/StContainer';
 import VwContainer from './common/StVwContainer';
+import { useDispatch, useSelector } from 'react-redux';
+import { signOut } from 'firebase/auth';
+import { auth } from 'fb/firebase';
+import { logout } from '../redux/modules/authSlice';
 
 const Header = () => {
+  const user = useSelector((state) => state.auth.users);
+  const userProfile = !!user;
+  const dispatch = useDispatch();
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      dispatch(logout());
+      alert('로그아웃 되셨습니다.');
+    } catch (error) {
+      console.error('로그아웃 실패', error);
+      alert('알 수 없는 오류가 발생하였습니다.');
+    }
+  };
   return (
     <StFixed>
       <VwContainer backgroundColor="#dc1920">
@@ -24,8 +41,14 @@ const Header = () => {
                 </svg>
                 내 주변 축제
               </StToMapLink>
-              <StSignupLink to={'/auth'}>회원가입</StSignupLink>
-              <StLoginLink to={'/auth'}>로그인</StLoginLink>
+              {/* 잠시 주석처리 */}
+              {/* <StSignupLink to={'/auth'}>회원가입</StSignupLink> */}
+
+              {!userProfile ? (
+                <StLoginLink to={'/auth'}>로그인</StLoginLink>
+              ) : (
+                <StLoginLink onClick={handleLogout}>로그아웃</StLoginLink>
+              )}
             </StNav>
           </StHeader>
         </StContainer>
