@@ -1,6 +1,9 @@
 import KakaoMap from 'components/KakaoMap/KakaoMap';
+import KakaoMapOverlay from 'components/KakaoMap/KakaoMapOverlay';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 export const useKakaoMap = () => {
+  const navigate = useNavigate();
   const [isReady, setIsReady] = useState(false);
 
   // 공식문서의 document.getElementById('map')
@@ -71,6 +74,44 @@ export const useKakaoMap = () => {
     });
   };
 
+  const handleSetOverlayMarker = () => {
+    const marker = new window.kakao.maps.Marker({
+      map: kakaoMap.current,
+      position: new window.kakao.maps.LatLng(33.450701, 126.570667)
+    });
+    //   const content = `<div class="wrap">
+    //  <div class="info">
+    //      <div class="title">
+    //             카카오 스페이스닷원
+    //            <button class="close" >닫기</button>
+    //         </div>
+    //        <div class="body">
+    //               <div class="img">
+    //                     <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">
+    //              </div>
+    //              <div class="desc">
+    //                  <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>
+    //                   <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>
+    //                   <div><a onclick="navigate('/detail/123')" class="link">홈페이지</a></div>
+    //             </div>
+    //           </div>
+    //       </div>
+    //   </div>`;
+    // const content = '<div class="kakaoMap__overlay" id="123"><button onclick={}>이동하기</button></div>';
+    const content = '<div class="kakaoMap__overlay" id="123"></div>';
+    // const content =
+    //   '<div class="kakaoMap__overlay" id="123"><button onclick="() => {const updateUrlParam = (paramName, paramValue) => {const url = new URL(window.location.href);url.searchParams.set(paramName, paramValue);window.history.pushState(null, ``, url.toString());const event = new Event(`popstate`);window.dispatchEvent(event);};updateUrlParam(`linkTo`, `1`)}"}>이동하기</button></div>';
+    const overlay = new window.kakao.maps.CustomOverlay({
+      content: content,
+      map: kakaoMap.current,
+      position: marker.getPosition()
+    });
+    console.log(document.querySelector('.kakaoMap__overlay'));
+    window.kakao.maps.event.addListener(marker, 'click', () => {
+      overlay.setMap(kakaoMap.current);
+    });
+  };
+
   const controller = {
     isReady,
     move: handleMove,
@@ -79,7 +120,27 @@ export const useKakaoMap = () => {
     traffic: handleTraffic,
     resize: handleResize,
     setMarker: handleSetMarker,
-    clickSetMarker: handleClickSetMarker
+    clickSetMarker: handleClickSetMarker,
+    setOverlayMarker: handleSetOverlayMarker
   };
   return { kakaoMapView, controller };
 };
+// const { kakaoMapView, controller } = useKakaoMap();
+
+// 페이지 이동하고 DB에 데이터가져와서  뿌려줄 땐 이걸 사용하자
+// useEffect(() => {
+//   if (controller.isReady) {
+//     controller.setMarker(37, 126, true);
+//   }
+// }, [controller.isReady]);
+
+//  <div>
+// <button onClick={() => controller.move(37, 126)}>순간이동</button>
+// <button onClick={() => controller.resize(100, 100)}>사이즈 조절</button>
+// <button onClick={() => controller.traffic(true)}>교통보기</button>
+// <button onClick={() => controller.traffic(false)}>교통끄기</button>
+// <button onClick={() => controller.clickSetMarker()}>clickSetMarker</button>
+// <button onClick={() => controller.setMarker(37, 126, true)}>마커표시</button>
+// <button onClick={() => controller.setOverlayMarker()}>setOverlayMarker</button>
+// <button onClick={() => {}}>URL 확인하기</button>
+// </div>

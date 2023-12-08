@@ -9,6 +9,7 @@ function KakaoMap({ kakaoMapRef, kakaoMap, isReady, setIsReady }) {
   useEffect(() => {
     const existScript = document.querySelector(`script[src*="${scriptSrc}"`);
     if (!existScript) {
+      console.log('스크립트 다시 다운로드함');
       const kakaoMapScript = document.createElement('script');
       kakaoMapScript.async = false;
       kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_APP_KEY}&autoload=false`;
