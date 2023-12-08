@@ -1,11 +1,11 @@
 import StContainer from 'components/common/StContainer';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router';
 import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import { useSelector } from 'react-redux';
+import { useFestival } from 'hooks';
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -34,12 +34,14 @@ function SamplePrevArrow(props) {
     />
   );
 }
-const Detail = () => {
-  const params = useParams();
-  const { targetFestival, snapshotFestivals } = useSelector((state) => state.festivalSlice);
-  const selectedData = snapshotFestivals.find((item) => item.organizerID === params.id);
 
-  const { name, startDate, endDate, description, image } = selectedData;
+const Detail = () => {
+  const { id } = useParams();
+  const festival = useFestival();
+
+  useEffect(() => {
+    festival.get(id);
+  }, []);
 
   const settings = {
     dots: false,
@@ -59,15 +61,17 @@ const Detail = () => {
       <StBannerWrap>
         <StContainer>
           <StInfo>
-            <StTitle>{name}</StTitle>
+            <StTitle>{festival?.responseData.name}</StTitle>
             <StPeriod>
-              {startDate} - {endDate}
+              {festival?.responseData.startDate} - {festival?.responseData.endDate}
             </StPeriod>
-            <StContent>{description}</StContent>
+            <StContent>{festival?.responseData.description}</StContent>
             <StShare>공유하기</StShare>
-            <StBannerImgWrap>
-              <StBanner src={image[1].url} />
-            </StBannerImgWrap>
+            {festival?.responseData.image && (
+              <StBannerImgWrap>
+                <StBanner src={festival?.responseData.image[1]?.url} />
+              </StBannerImgWrap>
+            )}
           </StInfo>
         </StContainer>
       </StBannerWrap>
@@ -76,7 +80,7 @@ const Detail = () => {
           <StImgSliderBox>
             <StContentTitle>축제 이미지</StContentTitle>
             <StImgSlider {...settings}>
-              {image.slice(1).map((item, index) => (
+              {festival?.responseData.image?.slice(1).map((item, index) => (
                 <StImgSlide key={index}>
                   <StImg src={item.url} alt={`Image ${index + 2}`} />
                 </StImgSlide>

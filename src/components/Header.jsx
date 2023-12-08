@@ -44,7 +44,7 @@ const StHeader = styled.header`
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 24px 20px;
+  padding: 24px 0;
 `;
 const StLogo = styled.h1`
   font-size: 18px;

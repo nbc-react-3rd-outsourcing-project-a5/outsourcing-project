@@ -16,7 +16,7 @@ export default function FestivalRegistrationForm() {
   const [endDate, handleChangeEndDate] = useDate();
   const [localImageFiles, handleUploadImageFiles] = useImageFile();
 
-  const handleCreate = useFestival('create');
+  const handleCreate = useFestival();
 
   // TODO : 수정하기에서 사용할 것
   // const [data2, handle2] = useFestival('get');
@@ -49,7 +49,7 @@ export default function FestivalRegistrationForm() {
       }
     };
 
-    handleCreate(newFestival);
+    handleCreate.create(newFestival);
   };
 
   return (
@@ -78,7 +78,6 @@ export default function FestivalRegistrationForm() {
                 <div>
                   <StDatePicker
                     locale={ko}
-                    minDate={new Date()}
                     dateFormat="yyyy년 MM월 dd일"
                     selected={startDate}
                     onChange={(date) => handleChangeStartDate(date)}

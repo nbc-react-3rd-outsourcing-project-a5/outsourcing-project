@@ -7,74 +7,93 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export default function HomeContents() {
-  const [selectedCategory, setSeletedCategory] = useState(false);
-
-  const [Festivals, getFestivals] = useFestival('get');
-  const [snapshotFestivals, getQueryFestivals] = useFestival('getQuery');
+  const [oncoming, setOncoming] = useState(true);
+  const festival = useFestival();
 
   useEffect(() => {
     const fetchFestivals = async () => {
       try {
         const query = collection(db, 'festival');
-        await getQueryFestivals(query);
+        await festival.getQuery(query);
       } catch (error) {
         console.error('Error fetching festivals:', error);
       }
     };
 
     fetchFestivals();
+    // 진행중, 진행예정 분류
+    isOncoming();
   }, []);
-  // 데이터가 로드되면 출력
-  // console.log('Festivals', Festivals);
-  // console.log('snapshotFestivals 값입니다', snapshotFestivals);
 
-  const handleChangedCategory = () => {
-    setSeletedCategory((state) => !state);
+  const isOncoming = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1; // Adding 1 to get the actual month (1-12)
+    const day = today.getDate();
+
+    festival.snapshotData.forEach((item) => {
+      const startDate = new Date(item.startDate);
+      const todayDate = new Date(`${year}. ${month}. 6.`);
+
+      console.log(`${startDate} is startDate.`);
+      console.log(`${todayDate} is todayDate.`);
+
+      if (startDate > todayDate) {
+        console.log(`${item.name} is in the future.`);
+      } else if (startDate <= todayDate) {
+        console.log(`${item.name} is in progress or today.`);
+      }
+    });
   };
 
-  const hdhd = () => {
-    getFestivals('3e33c3b4-5905-82ac-abd4-6010f7934ebb');
-    // getQueryFestivals('3e33c3b4-5905-82ac-abd4-6010f7934ebb');
+  const handleChangedCategory = (value) => {
+    if (value !== oncoming) {
+      setOncoming(value);
+    }
   };
 
-  // const filteredData = selectedCategory
-  //   ? fakeData.filter((item) => item.isDone)
-  //   : fakeData.filter((item) => !item.isDone);
+  const filterFestivalsByDate = (festivals, isOncoming) => {
+    const today = new Date();
+
+    return festivals.filter((item) => {
+      const startDate = new Date(item.startDate);
+      return isOncoming ? startDate <= today : startDate > today;
+    });
+  };
 
   return (
     <StContainer>
       <StCategory>
         <StP
-          $color={selectedCategory ? 'black' : '#888'}
-          $fontWeight={selectedCategory ? 'bold' : 'normal'}
-          onClick={handleChangedCategory}
+          $color={oncoming ? 'black' : '#888'}
+          $fontWeight={oncoming ? 'bold' : 'normal'}
+          onClick={() => handleChangedCategory(true)}
         >
           진행중
         </StP>
         <StP
-          $color={selectedCategory ? '#888' : 'black'}
-          $fontWeight={selectedCategory ? 'normal' : 'bold'}
-          onClick={handleChangedCategory}
+          $color={oncoming ? '#888' : 'black'}
+          $fontWeight={oncoming ? 'normal' : 'bold'}
+          onClick={() => handleChangedCategory(false)}
         >
           진행예정
         </StP>
       </StCategory>
       <StList>
-        {snapshotFestivals &&
-          snapshotFestivals.map((item) => {
-            return (
-              <StLink key={item.organizerID} item={item} to={`/detail/${item.organizerID}`}>
-                <StContentImgWrap>
-                  <StContentsImgs src={item.image[0].url} alt="" />
-                </StContentImgWrap>
-                <StContentTitle>{item.name}</StContentTitle>
-                {/* <StContentContent>{item.description}</StContentContent> */}
-                <StContentContent>
-                  {item.startDate} - {item.endDate}
-                </StContentContent>
-              </StLink>
-            );
-          })}
+        {filterFestivalsByDate(festival.snapshotData, oncoming).map((item) => {
+          return (
+            <StLink key={item.docID} to={`/detail/${item.docID}`}>
+              <StContentImgWrap>
+                <StContentsImgs src={item.image[0].url} alt="축제 썸네일 이미지" />
+              </StContentImgWrap>
+              <StLocation>📍{item.address}</StLocation>
+              <StContentTitle>{item.name}</StContentTitle>
+              <StContentContent>
+                {item.startDate} - {item.endDate}
+              </StContentContent>
+            </StLink>
+          );
+        })}
       </StList>
     </StContainer>
   );
@@ -85,7 +104,7 @@ const StCategory = styled.div`
   margin: 80px auto 20px;
 `;
 const StP = styled.p`
-  padding: 0 20px 10px;
+  padding-right: 20px;
   color: ${(props) => props.$color};
   font-size: 20px;
   text-decoration: ${(props) => props.$textDecoration};
@@ -110,20 +129,29 @@ const StList = styled.div`
   flex-wrap: wrap;
   gap: 10px;
   width: 100%;
-  margin: 0 auto;
+  margin: 0 auto 100px;
 `;
 
 const StLink = styled(Link)`
   width: calc(33.3333% - 10px);
 `;
 
-const StContentTitle = styled.div`
+const StLocation = styled.p`
+  margin-top: 16px;
+  color: #777;
+  font-size: 14px;
+`;
+
+const StContentTitle = styled.h2`
   margin-top: 8px;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: bold;
 `;
 
 const StContentContent = styled.div`
-  margin-top: 5px;
+  margin-top: 8px;
+  margin-bottom: 24px;
+  color: #777;
 
   display: -webkit-box;
   -webkit-line-clamp: 2;

@@ -26,7 +26,11 @@ export const __createFestival = createAsyncThunk('createFestival', async (newFes
 export const __getQueryFestivals = createAsyncThunk('getAllFestivals', async (query, thunkAPI) => {
   try {
     const querySnapshot = await getDocs(query);
-    const data = querySnapshot.docs.map((doc) => doc.data());
+    const data = querySnapshot.docs.map((doc) => {
+      const docID = doc.id;
+      const data = doc.data();
+      return { docID, ...data };
+    });
 
     const serializedData = data.map((item) => ({
       ...item,
@@ -34,7 +38,6 @@ export const __getQueryFestivals = createAsyncThunk('getAllFestivals', async (qu
       startDate: item.startDate.toDate().toLocaleDateString(),
       endDate: item.endDate.toDate().toLocaleDateString()
     }));
-
     return serializedData;
   } catch (error) {
     console.error('Error fetching festivals:', error);
@@ -55,8 +58,8 @@ export const __getFestival = createAsyncThunk('getFestival', async (festivalID, 
     const docSnap = await getDoc(docRef);
     const docData = docSnap.data();
     if (docData?.startDate) {
-      docData.startDate = String(docData.startDate.toDate());
-      docData.endDate = String(docData.endDate.toDate());
+      docData.startDate = docData.startDate.toDate().toLocaleDateString();
+      docData.endDate = docData.endDate.toDate().toLocaleDateString();
     }
     return thunkAPI.fulfillWithValue(docData);
   } catch (error) {
@@ -100,7 +103,7 @@ const initialState = {
   isError: false,
   error: null,
   snapshotFestivals: [],
-  targetFestival: null
+  targetFestival: []
 };
 
 export const festivalSlice = createSlice({
@@ -150,8 +153,9 @@ export const festivalSlice = createSlice({
       })
       .addCase(__getFestival.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log('action.payload', action.payload);
-        return action.payload;
+        const serializedData = action.payload;
+        state.targetFestival = serializedData;
+        console.log('action.payload : ', action.payload);
       })
       .addCase(__getFestival.rejected, (state, action) => {
         state.isLoading = false;
