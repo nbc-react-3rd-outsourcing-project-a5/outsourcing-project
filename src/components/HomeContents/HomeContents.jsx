@@ -1,19 +1,45 @@
-import { fakeData } from 'components/Carousel/Carousel';
+import { collection } from '@firebase/firestore';
 import StContainer from 'components/common/StContainer';
-import React, { useState } from 'react';
+import { db } from 'fb/firebase';
+import { useFestival } from 'hooks';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export default function HomeContents() {
   const [selectedCategory, setSeletedCategory] = useState(false);
+
+  const [Festivals, getFestivals] = useFestival('get');
+  const [snapshotFestivals, getQueryFestivals] = useFestival('getQuery');
+
+  useEffect(() => {
+    const fetchFestivals = async () => {
+      try {
+        const query = collection(db, 'festival');
+        await getQueryFestivals(query);
+      } catch (error) {
+        console.error('Error fetching festivals:', error);
+      }
+    };
+
+    fetchFestivals();
+  }, []);
+  // 데이터가 로드되면 출력
+  // console.log('Festivals', Festivals);
+  // console.log('snapshotFestivals 값입니다', snapshotFestivals);
 
   const handleChangedCategory = () => {
     setSeletedCategory((state) => !state);
   };
 
-  const filteredData = selectedCategory
-    ? fakeData.filter((item) => item.isDone)
-    : fakeData.filter((item) => !item.isDone);
+  const hdhd = () => {
+    getFestivals('3e33c3b4-5905-82ac-abd4-6010f7934ebb');
+    // getQueryFestivals('3e33c3b4-5905-82ac-abd4-6010f7934ebb');
+  };
+
+  // const filteredData = selectedCategory
+  //   ? fakeData.filter((item) => item.isDone)
+  //   : fakeData.filter((item) => !item.isDone);
 
   return (
     <StContainer>
@@ -34,15 +60,21 @@ export default function HomeContents() {
         </StP>
       </StCategory>
       <StList>
-        {filteredData.map((item) => {
-          return (
-            <StLink key={item.id} item={item} to={`/detail/${item.id}`}>
-              <StContentsImgs src={item.img} alt="" />
-              <StContentTitle>{item.title}</StContentTitle>
-              <StContentContent>{item.content}</StContentContent>
-            </StLink>
-          );
-        })}
+        {snapshotFestivals &&
+          snapshotFestivals.map((item) => {
+            return (
+              <StLink key={item.organizerID} item={item} to={`/detail/${item.organizerID}`}>
+                <StContentImgWrap>
+                  <StContentsImgs src={item.image[0].url} alt="" />
+                </StContentImgWrap>
+                <StContentTitle>{item.name}</StContentTitle>
+                {/* <StContentContent>{item.description}</StContentContent> */}
+                <StContentContent>
+                  {item.startDate} - {item.endDate}
+                </StContentContent>
+              </StLink>
+            );
+          })}
       </StList>
     </StContainer>
   );
@@ -60,14 +92,18 @@ const StP = styled.p`
   font-weight: ${(props) => props.$fontWeight};
   cursor: pointer;
 `;
+const StContentImgWrap = styled.div`
+  width: 100%;
+  height: 250px;
+  border-radius: 10px;
+  overflow: hidden;
+`;
 
 const StContentsImgs = styled.img`
   width: 100%;
-  height: 250px;
+  object-fit: cover;
   display: flex;
   align-items: center;
-
-  border-radius: 15px;
 `;
 const StList = styled.div`
   display: flex;

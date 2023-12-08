@@ -8,7 +8,7 @@ import uuid from 'react-uuid';
 import { uploadFiles } from 'utils/fireStorage';
 export default function FestivalRegistrationForm() {
   // TODO : organizer 정보 가져오기
-  const organizer = { id: '123123', name: '우당탕탕' };
+  const organizer = { id: uuid(), name: '우당탕탕' };
   const [name, handleChangeName] = useInput();
   const [address, handleChangeAddress] = useInput();
   const [description, handleChangeDescription] = useInput();

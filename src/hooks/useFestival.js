@@ -11,7 +11,7 @@ import {
 
 export const useFestival = (method = null) => {
   const dispatch = useDispatch();
-  const { error, isError, targertFestival, snapshotFestivals } = useSelector((state) => state.festivalSlice);
+  const { error, isError, targetFestival, snapshotFestivals } = useSelector((state) => state.festivalSlice);
 
   useEffect(() => {
     if (isError) {
@@ -32,7 +32,7 @@ export const useFestival = (method = null) => {
       const handleGet = (festivalID) => {
         dispatch(__getFestival(festivalID));
       };
-      return [targertFestival, handleGet];
+      return [targetFestival, handleGet];
     case 'getQuery':
       const handleGetQuery = (query) => {
         dispatch(__getQueryFestivals(query));
@@ -52,6 +52,6 @@ export const useFestival = (method = null) => {
       return handleDelete;
 
     default:
-      return { targertFestival, snapshotFestivals };
+      return { targetFestival, snapshotFestivals };
   }
 };
