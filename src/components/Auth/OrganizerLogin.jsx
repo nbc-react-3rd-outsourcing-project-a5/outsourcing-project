@@ -9,7 +9,7 @@ import { doc, setDoc } from '@firebase/firestore';
 import Login from './Login';
 import { Link } from 'react-router-dom';
 
-export default function Organizer() {
+export default function OrganizerLogin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

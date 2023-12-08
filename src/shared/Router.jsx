@@ -7,7 +7,7 @@ import Search from 'pages/Search/Search';
 import User from 'pages/User/User';
 import Auth from 'pages/Auth/Auth';
 import GenernalLogin from 'components/Auth/GenernalLogin';
-import Organizer from 'components/Auth/OrganizerLogin';
+import OrganizerLogin from 'components/Auth/OrganizerLogin';
 
 export default function Router() {
   return (
@@ -25,7 +25,7 @@ export default function Router() {
         <Route>
           <Route path="auth" element={<Auth />} />
           <Route path="auth/genernal" element={<GenernalLogin />} />
-          <Route path="auth/organizer" element={<Organizer />} />
+          <Route path="auth/organizer" element={<OrganizerLogin />} />
         </Route>
       </Routes>
     </BrowserRouter>
