@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   __createFestival,
@@ -8,11 +8,14 @@ import {
   __deleteFestival,
   clearError
 } from '../redux/modules/festivalSlice';
-
-export const useFestival = (method = null) => {
+export const useFestival = () => {
   const dispatch = useDispatch();
-  const { error, isError, targertFestival, snapshotFestivals } = useSelector((state) => state.festivalSlice);
-
+  const {
+    error,
+    isError,
+    targetFestival: responseData,
+    snapshotFestivals: snapshotData
+  } = useSelector((state) => state.festivalSlice);
   useEffect(() => {
     if (isError) {
       console.error('커스텀 훅 에러');
@@ -20,38 +23,14 @@ export const useFestival = (method = null) => {
       dispatch(clearError());
     }
   }, [isError, dispatch, error]);
-
-  switch (method) {
-    case 'create':
-      const handelCreate = (festivalData) => {
-        dispatch(__createFestival(festivalData));
-      };
-
-      return handelCreate;
-    case 'get':
-      const handleGet = (festivalID) => {
-        dispatch(__getFestival(festivalID));
-      };
-      return [targertFestival, handleGet];
-    case 'getQuery':
-      const handleGetQuery = (query) => {
-        dispatch(__getQueryFestivals(query));
-      };
-      return [snapshotFestivals, handleGetQuery];
-
-    case 'update':
-      const handleUpdate = (festivalData) => {
-        dispatch(__updateFestival(festivalData));
-      };
-      return handleUpdate;
-
-    case 'delete':
-      const handleDelete = (festivalID) => {
-        dispatch(__deleteFestival(festivalID));
-      };
-      return handleDelete;
-
-    default:
-      return { targertFestival, snapshotFestivals };
-  }
+  const festival = {
+    create: (festivalData) => dispatch(__createFestival(festivalData)),
+    get: (festivalID) => dispatch(__getFestival(festivalID)),
+    getQuery: (query) => dispatch(__getQueryFestivals(query)),
+    upDate: (festivalData) => dispatch(__updateFestival(festivalData)),
+    delete: (festivalID) => dispatch(__deleteFestival(festivalID)),
+    responseData,
+    snapshotData
+  };
+  return festival;
 };

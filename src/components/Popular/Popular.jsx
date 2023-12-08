@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Slider from 'react-slick';
 import popularData from './popularData.json';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import StContainer from 'components/common/StContainer';
+import { useFestival } from 'hooks';
+import { collection } from '@firebase/firestore';
+import { db } from 'fb/firebase';
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -45,45 +48,77 @@ export default function Popular() {
     prevArrow: <SamplePrevArrow />
   };
 
-  const popularFestival = popularData.festival;
+  const festival = useFestival();
+
+  useEffect(() => {
+    const fetchFestivals = async () => {
+      try {
+        const query = collection(db, 'festival');
+        await festival.getQuery(query);
+      } catch (error) {
+        console.error('Error fetching festivals:', error);
+      }
+    };
+
+    fetchFestivals();
+  }, []);
 
   return (
     <StContainer>
-      <StTitle>
-        <h2>인기 축제</h2>
-      </StTitle>
-      <StImageSlider {...settings}>
-        {popularFestival.map((item) => {
-          return (
-            <StImageBox key={item.id}>
-              <img src={item.img} alt="축제 이미지" />
-              <StDescription>
-                <h3>{item.title}</h3>
-                <p>{item.date}</p>
-              </StDescription>
-            </StImageBox>
-          );
-        })}
-      </StImageSlider>
+      <StContainerInner>
+        <StTitle>
+          <h2>인기 축제</h2>
+        </StTitle>
+        <StImageSlider {...settings}>
+          {festival.snapshotData.map((item) => {
+            return (
+              <StImageBox key={item.docID}>
+                <img src={item.image[0].url} alt="축제 이미지" />
+                <StLocation>📍{item.address}</StLocation>
+                <StDescription>
+                  <h3>{item.name}</h3>
+                  <p>
+                    {item.startDate} - {item.endDate}
+                  </p>
+                </StDescription>
+              </StImageBox>
+            );
+          })}
+        </StImageSlider>
+      </StContainerInner>
     </StContainer>
   );
 }
 
+const StContainerInner = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+`;
+
 const StTitle = styled.div`
-  font-size: 1.4rem;
+  margin-top: 80px;
+  margin-bottom: 20px;
   font-weight: 700;
+
+  & h2 {
+    font-size: 24px;
+  }
 `;
 
 const StImageSlider = styled(Slider)`
-  display: flex;
-  align-items: center;
-  gap: 16px;
   width: 100%;
-  .silck-list {
-    margin-right: 20px;
-    overflow-x: hidden;
+
+  & .slick-track {
+    display: flex;
+    gap: 10px;
   }
 
+  & .slick-slide img {
+    border-radius: 10px;
+  }
   .slick-prev:before,
   .slick-next:before {
     font-size: 45px;
@@ -104,9 +139,7 @@ const StImageSlider = styled(Slider)`
 `;
 
 const StImageBox = styled.div`
-  padding: 0 6px;
   width: 240px;
-  height: 370px;
   display: flex;
   flex-direction: column;
 
@@ -117,20 +150,33 @@ const StImageBox = styled.div`
   }
 `;
 
+const StLocation = styled.p`
+  margin-top: 16px;
+  color: #777;
+  font-size: 14px;
+`;
+
 const StDescription = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  margin-top: 8px;
+  margin-left: 2px;
+  font-size: 20px;
   gap: 8px;
-  padding: 8px;
 
   & h3 {
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    white-space: nowrap; /* 텍스트가 한 줄로만 표시되도록 설정 */
+    overflow: hidden; /* 넘치는 부분은 숨김 처리 */
+    text-overflow: ellipsis; /* 말줄임표 적용 */
   }
 
   & p {
-    font-size: 12px;
+    font-size: 14px;
+    color: #777;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;

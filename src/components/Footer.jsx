@@ -5,7 +5,7 @@ import StContainer from './common/StContainer';
 
 const Footer = () => {
   return (
-    <StVwContainer backgroundColor="#126136">
+    <StVwContainer $backgroundColor="#126136">
       <StContainer>
         <Stp>ⓒ 2023. 원터 원더랜드 가이드. All rights reserved.</Stp>
       </StContainer>
