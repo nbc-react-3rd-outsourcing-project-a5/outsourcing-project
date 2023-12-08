@@ -1,10 +1,13 @@
 import { fakeData } from 'components/Carousel/Carousel';
 import StContainer from 'components/common/StContainer';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
 export default function HomeContents() {
+  const users = useSelector((state) => state.auth.users);
+  console.log(users);
   const [selectedCategory, setSeletedCategory] = useState(false);
 
   const handleChangedCategory = () => {

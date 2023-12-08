@@ -1,8 +1,8 @@
 import React from 'react';
-import AuthLogin from 'components/Auth/AuthLogin';
+import AuthIndex from 'components/Auth/AuthIndex';
 
 function Auth() {
-  return <AuthLogin />;
+  return <AuthIndex />;
 }
 
 export default Auth;

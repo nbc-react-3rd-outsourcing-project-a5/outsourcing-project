@@ -1,4 +1,4 @@
-import { auth } from 'fb/firebase';
+import { auth, db } from 'fb/firebase';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { checkLogin } from '../src/redux/modules/authSlice';
@@ -6,15 +6,34 @@ import Router from 'shared/Router';
 import { ThemeProvider } from 'styled-components';
 import GlobalStyle from 'styles/GlobalStyle';
 import theme from 'styles/theme';
-import { onAuthStateChanged } from '@firebase/auth';
+import { collection, getDocs } from '@firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      dispatch(checkLogin(user.providerData));
-    });
-  }, [dispatch]);
+    const func = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'user'));
+        const userProfile = querySnapshot.docs.map((doc) => {
+          return {
+            id: doc.id,
+            ...doc.data()
+          };
+        });
+        onAuthStateChanged(auth, (user) => {
+          const userEmail = user?.providerData[0].email;
+          const selectUser = userProfile.find((i) => {
+            return userEmail === i.email;
+          });
+          dispatch(checkLogin(selectUser));
+        });
+      } catch (error) {
+        console.error('사용자 프로필 불러오는 중 오류', error);
+      }
+    };
+    func();
+  }, []);
 
   return (
     <>

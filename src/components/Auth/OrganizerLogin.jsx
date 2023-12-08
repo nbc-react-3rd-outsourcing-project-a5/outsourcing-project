@@ -1,12 +1,15 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@firebase/auth';
-import { auth } from 'fb/firebase';
+import { auth, db } from 'fb/firebase';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/modules/authSlice';
 import { useNavigate } from 'react-router';
+import { doc, setDoc } from '@firebase/firestore';
+import Login from './Login';
+import { Link } from 'react-router-dom';
 
-export default function AuthLogin() {
+export default function Organizer() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -14,7 +17,9 @@ export default function AuthLogin() {
   const [password, setPassword] = useState('');
   const [checkPassword, setCheckPassword] = useState('');
   const [userName, setUserName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [switchLogin, setSwitchLogin] = useState(false);
+  const [organizer] = useState(true);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -38,14 +43,26 @@ export default function AuthLogin() {
           return;
         }
         const response = await createUserWithEmailAndPassword(auth, email, password);
-        console.log(response);
+        await setDoc(doc(db, 'user', response.user.uid), {
+          //오거나이저 true, false
+          name: userName,
+          phoneNumber,
+          email,
+          organizer,
+          festivals: []
+        });
         setEmail('');
         setPassword('');
+        setUserName('');
+        setCheckPassword('');
+        setPhoneNumber('');
         setSwitchLogin(false);
+        alert('회원가입이 완료되었습니다.');
       } else {
         //로그인
         const signIn = await signInWithEmailAndPassword(auth, email.trim(), password);
         dispatch(login(signIn.user.providerData[0]));
+        alert('로그인 되었습니다.');
         navigate('/');
       }
     } catch (err) {
@@ -56,52 +73,33 @@ export default function AuthLogin() {
   return (
     <StLoginCardContainer>
       <StLoginCard>
-        <form onSubmit={handleSignUp}>
-          <h2>{switchLogin ? '회원가입' : '로그인'}</h2>
-          <div>
-            {switchLogin ? (
-              <>
-                <div>
-                  <input value={userName} onChange={(e) => setUserName(e.target.value)} placeholder="업체 이름" />
-                </div>
-              </>
-            ) : (
-              ''
-            )}
-            <div>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="아이디" />
-            </div>
-            <div>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="비밀번호"
-              />
-            </div>
-            {switchLogin ? (
-              <div>
-                <input
-                  type="password"
-                  value={checkPassword}
-                  onChange={(e) => setCheckPassword(e.target.value)}
-                  placeholder="비밀번호 확인"
-                />
-              </div>
-            ) : (
-              ''
-            )}
-          </div>
-          <button type="submit">{switchLogin ? '가입하기' : '로그인'}</button>
-          <StSwitchBtn
-            onClick={() => {
-              setSwitchLogin((s) => !s);
-            }}
-            type="button"
-          >
+        <div>
+          <h2>환영합니다!</h2>
+          <p>업체회원 로그인</p>
+        </div>
+        <Login
+          userName={userName}
+          setUserName={setUserName}
+          password={password}
+          setPassword={setPassword}
+          email={email}
+          setEmail={setEmail}
+          checkPassword={checkPassword}
+          setCheckPassword={setCheckPassword}
+          phoneNumber={phoneNumber}
+          setPhoneNumber={setPhoneNumber}
+          switchLogin={switchLogin}
+          handler={handleSignUp}
+        />
+        <div>
+          <StSwitchBtn onClick={() => setSwitchLogin((s) => !s)}>
             {switchLogin ? '로그인하기' : '회원가입하기'}
           </StSwitchBtn>
-        </form>
+        </div>
+        <div>
+          <StP>일반회원이신가요?</StP>
+          <StLink to={'/auth/genernal'}>일반회원 로그인 바로가기</StLink>
+        </div>
       </StLoginCard>
     </StLoginCardContainer>
   );
@@ -111,6 +109,7 @@ const StLoginCardContainer = styled.div`
   height: 100vh;
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background: linear-gradient(130deg, #99353c 26.333333%, rgba(0, 38, 84, 0) 15.333333%),
@@ -118,20 +117,29 @@ const StLoginCardContainer = styled.div`
 `;
 
 const StLoginCard = styled.div`
+  /* background-color: white; */
+  width: 25%;
   height: 60%;
-  width: 40%;
-  display: flex;
-  align-items: center;
-  box-shadow: 0px 0px 15px 7px #0000006e;
-  background: linear-gradient(90deg, #fff 50%, rgba(0, 0, 0, 0) 25%),
-    linear-gradient(90deg, #2b4238 57.666666%, rgba(0, 0, 0, 0.219) 50%),
-    url(https://blog.kakaocdn.net/dn/Av4yp/btqRpubzxJV/UJc3HveupJXuI58p3foKik/img.jpg);
-  background-position: center;
-  background-size: cover;
+  padding: 20px;
 
-  & > form {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+
+  color: white;
+  font-size: large;
+  font-weight: 700;
+  text-align: center;
+  background-color: #99353c;
+  /* background-image: linear-gradient(rgba(0, 0, 0, 0.413), rgba(0, 0, 0, 0.504)),
+    url(https://img.freepik.com/premium-photo/snowman-in-a-winter-christmas-scene-with-snow-pine-trees-and-warm-light-merry-christmas-background_719646-1121.jpg);
+  background-position: center;
+  background-size: cover; */
+  box-shadow: 0px 0px 15px 7px #0000006e;
+
+  & > div > h2 {
+    margin-bottom: 10px;
   }
 `;
 
@@ -140,6 +148,18 @@ const StSwitchBtn = styled.button`
   border: none;
   background-color: transparent;
   text-decoration: underline;
-  color: #00000085;
+  color: #ffffff6f;
+  font-size: small;
+  font-weight: 700;
   cursor: pointer;
+`;
+
+const StLink = styled(Link)`
+  color: #ffffff6f;
+  font-size: small;
+  text-decoration: underline;
+`;
+
+const StP = styled.p`
+  margin-bottom: 5px;
 `;
