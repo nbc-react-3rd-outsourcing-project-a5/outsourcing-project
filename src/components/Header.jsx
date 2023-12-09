@@ -10,6 +10,7 @@ import { logout } from '../redux/modules/authSlice';
 
 const Header = () => {
   const user = useSelector((state) => state.auth.users);
+  console.log(user);
   const userProfile = !!user;
   const dispatch = useDispatch();
   const handleLogout = async () => {
@@ -41,9 +42,9 @@ const Header = () => {
                 </svg>
                 내 주변 축제
               </StToMapLink>
+              {user?.organizer ? <StLoginLink to={'/registration'}>축제 등록하기</StLoginLink> : ''}
               {/* 잠시 주석처리 */}
               {/* <StSignupLink to={'/auth'}>회원가입</StSignupLink> */}
-
               {!userProfile ? (
                 <StLoginLink to={'/auth'}>로그인</StLoginLink>
               ) : (
