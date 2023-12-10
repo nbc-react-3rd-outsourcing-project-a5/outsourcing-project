@@ -6,15 +6,22 @@ import styled from 'styled-components';
 import { useInput, useDate, useImageFile, useFestival } from 'hooks';
 import uuid from 'react-uuid';
 import { uploadFiles } from 'utils/fireStorage';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
 export default function FestivalRegistrationForm() {
   // TODO : organizer 정보 가져오기
-  const organizer = { id: uuid(), name: '우당탕탕' };
   const [name, handleChangeName] = useInput();
   const [address, handleChangeAddress] = useInput();
   const [description, handleChangeDescription] = useInput();
   const [startDate, handleChangeStartDate] = useDate();
   const [endDate, handleChangeEndDate] = useDate();
   const [localImageFiles, handleUploadImageFiles] = useImageFile();
+  const organizerProfile = useSelector((state) => state.auth.targetUser);
+  const organizer = { id: uuid(), name: organizerProfile.name };
+  const navigate = useNavigate();
+
+  // console.log(organizer);
 
   const handleCreate = useFestival();
 
@@ -25,31 +32,43 @@ export default function FestivalRegistrationForm() {
   const handleSummit = async (e) => {
     e.preventDefault();
     const docID = uuid();
+    try {
+      const image = await uploadFiles(
+        'festival',
+        docID,
+        localImageFiles.map((n) => n.file)
+      );
 
-    const image = await uploadFiles(
-      'festival',
-      docID,
-      localImageFiles.map((n) => n.file)
-    );
+      //TODO : 빈 데이터 추가하기
+      // overlayType, overlay, organizerID
+      const newFestival = {
+        docID,
+        data: {
+          name,
+          organizerID: organizer.id,
+          address,
+          description,
+          startDate,
+          endDate,
+          image,
+          overlayType: null,
+          overlay: []
+        }
+      };
 
-    //TODO : 빈 데이터 추가하기
-    // overlayType, overlay, organizerID
-    const newFestival = {
-      docID,
-      data: {
-        name,
-        organizerID: organizer.id,
-        address,
-        description,
-        startDate,
-        endDate,
-        image,
-        overlayType: null,
-        overlay: []
-      }
-    };
+      handleCreate.create(newFestival);
+      toast.success('축제가 업로드 되었습니다!');
+      navigate('/');
+    } catch (error) {
+      toast.error('축제 업로드에 실패했습니다.');
+      navigate('/');
+    }
+  };
 
-    handleCreate.create(newFestival);
+  const handleCancel = () => {
+    if (window.confirm('나가시겠습니까? 변경한 내용이 저장되지 않을 수 있습니다.')) {
+      navigate('/');
+    }
   };
 
   return (
@@ -122,7 +141,9 @@ export default function FestivalRegistrationForm() {
           />
         </StTextareaContainer>
         <StButton>
-          <button type="submit">취소하기</button>
+          <button type="button" onClick={handleCancel}>
+            취소하기
+          </button>
           <button type="submit">등록하기</button>
         </StButton>
       </StForm>
