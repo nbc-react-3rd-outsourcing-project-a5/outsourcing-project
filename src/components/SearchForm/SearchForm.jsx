@@ -10,15 +10,15 @@ import { useInput } from 'hooks';
 import FormSelect from './FormSelect';
 import { collection, getDocs, where } from 'firebase/firestore';
 import { db } from 'fb/firebase';
+import { useNavigate } from 'react-router-dom';
 
 export default function SearchForm() {
+  const navigate = useNavigate();
   const [startDate, handleChangeStartDate] = useDate();
   const [endDate, handleChangeEndDate] = useDate();
   const [region, onSelectRegion] = useInput();
   const [city, onSelectCity] = useInput();
-  const [searchResult, setSearchResult] = useState(null);
-  console.log(searchResult);
-  const [isSearching, setIsSearching] = useState(false);
+  const [searchResult, setSearchResult] = useState([]);
   const regionNameList = regionList.map((n) => n.name);
   const regionCityList = region && regionList.find((n) => n.name === region).city;
   const address = `${region} ${city}`;
@@ -42,7 +42,6 @@ export default function SearchForm() {
           where('endDate', '<=', data.endDate),
           where('address', '==', data.address)
         );
-
         const result = [];
         querySnapshot.forEach((doc) => {
           result.push({ id: doc.id, ...doc.data() });
@@ -56,6 +55,13 @@ export default function SearchForm() {
     fetchData();
   };
 
+  const handleMovingPage = () => {
+    const selectedItem = searchResult.find((item) => item.address === address);
+    if (selectedItem) {
+      navigate(`detail/${selectedItem.id}`);
+      console.log(selectedItem.id);
+    }
+  };
   return (
     <StForm onSubmit={onSubmit}>
       <StFilterBox>
@@ -65,7 +71,6 @@ export default function SearchForm() {
             <div>
               <StDatePicker
                 locale={ko}
-                minDate={''}
                 dateFormat="yyyy-MM-dd"
                 selected={startDate}
                 onChange={handleChangeStartDate}
@@ -104,19 +109,21 @@ export default function SearchForm() {
           <img src={resetIcon} alt="초기화 아이콘" />
         </span>
       </StButtonWrapper>
-      {isSearching ? (
+      {
         <div>
           {searchResult
             .filter((item) => item.address === address)
             .map((item) => {
               return (
-                <>
-                  <h2>축제명: {item.name}</h2>
-                </>
+                <div key={item.id}>
+                  <h2>
+                    축제명: <span onClick={handleMovingPage}>{item.name}</span>
+                  </h2>
+                </div>
               );
             })}
         </div>
-      ) : null}
+      }
     </StForm>
   );
 }
