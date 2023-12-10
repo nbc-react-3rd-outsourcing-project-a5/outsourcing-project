@@ -8,22 +8,52 @@ import StContainer from 'components/common/StContainer';
 import { useFestival } from 'hooks';
 import { collection } from '@firebase/firestore';
 import { db } from 'fb/firebase';
+import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
   return (
     <div
-      className={className}
       style={{
-        ...style,
-        width: '20px',
-        top: '45%',
+        position: 'absolute',
+        top: 'calc(50% - 40px)',
+        bottom: '20px',
         display: 'block',
-        right: '3%'
+        right: '-20px',
+        backgroundColor: '#FFFFFF',
+        borderRadius: '20px',
+        width: '40px',
+        height: '40px',
+        zIndex: '1'
       }}
-      onClick={onClick}
-    />
+    >
+      <svg
+        className={className}
+        onClick={onClick}
+        style={{
+          ...style,
+          width: '40px',
+          height: '40px',
+          top: '20px',
+          display: 'block',
+          right: '0'
+        }}
+        width="40"
+        height="40"
+        viewBox="0 0 512 512"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill="#dc1920"
+          d="M256.25 16.042c-132.548 0-240 107.451-240 240s107.452 240 240 240s240-107.452 240-240s-107.45-240-240-240ZM403.328 403.12A207.253 207.253 0 1 1 447.917 337a207.364 207.364 0 0 1-44.589 66.12Z"
+        />
+        <path
+          fill="#dc1920"
+          d="m239.637 164.987l75.053 75.054H128.137v32H314.69l-75.053 75.054l22.627 22.627l113.681-113.681L262.264 142.36l-22.627 22.627z"
+        />
+      </svg>
+    </div>
   );
 }
 
@@ -31,10 +61,45 @@ function SamplePrevArrow(props) {
   const { className, style, onClick } = props;
   return (
     <div
-      className={className}
-      style={{ ...style, width: '20px', top: '45%', left: '1%', display: 'block' }}
-      onClick={onClick}
-    />
+      style={{
+        position: 'absolute',
+        top: 'calc(50% - 40px)',
+        bottom: '20px',
+        display: 'block',
+        left: '-20px',
+        backgroundColor: '#FFFFFF',
+        borderRadius: '20px',
+        width: '40px',
+        height: '40px',
+        zIndex: '1'
+      }}
+    >
+      <svg
+        className={className}
+        onClick={onClick}
+        style={{
+          ...style,
+          width: '40px',
+          height: '40px',
+          top: '20px',
+          display: 'block',
+          left: '0'
+        }}
+        width="40"
+        height="40"
+        viewBox="0 0 512 512"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill="#dc1920"
+          d="M256 16.042c-132.548 0-240 107.451-240 240s107.452 240 240 240s240-107.452 240-240s-107.452-240-240-240ZM403.078 403.12A207.253 207.253 0 1 1 447.667 337a207.364 207.364 0 0 1-44.589 66.12Z"
+        />
+        <path
+          fill="#dc1920"
+          d="m272.614 164.987l-22.628-22.627l-113.681 113.681l113.681 113.681l22.628-22.627l-75.054-75.054H385v-32H197.56l75.054-75.054z"
+        />
+      </svg>
+    </div>
   );
 }
 
@@ -78,16 +143,18 @@ export default function Popular() {
         <StImageSlider {...settings}>
           {snapshotFestivals.map((item) => {
             return (
-              <StImageBox key={item.docID}>
-                <img src={item.image[0]?.url} alt="축제 이미지" />
-                <StLocation>📍{item.address}</StLocation>
-                <StDescription>
-                  <h3>{item.name}</h3>
-                  <p>
-                    {item.startDate} - {item.endDate}
-                  </p>
-                </StDescription>
-              </StImageBox>
+              <StLink key={item.docID} to={`/detail/${item.docID}`}>
+                <StImageBox key={item.docID}>
+                  <img src={item.image[0].url} alt="축제 이미지" />
+                  <StLocation>📍{item.address}</StLocation>
+                  <StDescription>
+                    <h3>{item.name}</h3>
+                    <p>
+                      {item.startDate} - {item.endDate}
+                    </p>
+                  </StDescription>
+                </StImageBox>
+              </StLink>
             );
           })}
         </StImageSlider>
@@ -144,8 +211,10 @@ const StImageSlider = styled(Slider)`
   }
 `;
 
+const StLink = styled(Link)``;
+
 const StImageBox = styled.div`
-  width: 240px;
+  width: 100%;
   display: flex;
   flex-direction: column;
 
