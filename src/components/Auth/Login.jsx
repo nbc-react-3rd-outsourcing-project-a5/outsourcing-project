@@ -25,25 +25,43 @@ export default function Login({
       {switchLogin ? (
         <>
           <div>
-            <StInput required value={userName} onChange={handleUserNameOnchange} type="text" placeholder="이름" />
+            <StInput
+              // required
+              value={userName}
+              onChange={handleUserNameOnchange}
+              type="text"
+              placeholder="이름"
+            />
           </div>
           <div>
             <StInput
               type="number"
               maxLength={11}
-              required
+              // required
               value={phoneNumber}
               onChange={handlePhoneOnchange}
               placeholder="전화번호(숫자만 써주세요!)"
             />
           </div>
           <div>
-            <StInput type="email" value={email} required onChange={handleEmailOnchange} placeholder="이메일" />
+            <StInput
+              type="email"
+              value={email}
+              // required
+              onChange={handleEmailOnchange}
+              placeholder="이메일"
+            />
           </div>
         </>
       ) : (
         <div>
-          <StInput type="email" value={email} required onChange={handleEmailOnchange} placeholder="이메일" />
+          <StInput
+            type="email"
+            value={email}
+            // required
+            onChange={handleEmailOnchange}
+            placeholder="이메일"
+          />
         </div>
       )}
       <div>
@@ -51,7 +69,7 @@ export default function Login({
           type="password"
           value={password}
           onChange={handlePasswordOnchange}
-          required
+          // required
           minLength={6}
           maxLength={12}
           placeholder="비밀번호(6자~12자)"
@@ -63,7 +81,7 @@ export default function Login({
             type="password"
             value={checkPassword}
             onChange={handleCheckPwOnchange}
-            required
+            // required
             minLength={6}
             maxLength={12}
             placeholder="비밀번호 확인(6자~12자)"

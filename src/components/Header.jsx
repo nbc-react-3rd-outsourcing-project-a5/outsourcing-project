@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { signOut } from 'firebase/auth';
 import { auth } from 'fb/firebase';
 import { logout } from '../redux/modules/authSlice';
+import { toast } from 'react-toastify';
 
 const Header = () => {
   const user = useSelector((state) => state.auth.targetUser);
@@ -17,11 +18,11 @@ const Header = () => {
     try {
       await signOut(auth);
       dispatch(logout());
-      alert('로그아웃 되셨습니다.');
       navigate('/');
+      toast.success('로그아웃 되셨습니다.');
     } catch (error) {
       console.error('로그아웃 실패', error);
-      alert('알 수 없는 오류가 발생하였습니다.');
+      toast.error('알 수 없는 오류가 발생하였습니다.');
     }
   };
   return (
