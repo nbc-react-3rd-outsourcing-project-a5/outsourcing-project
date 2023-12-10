@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import StContainer from './common/StContainer';
 import VwContainer from './common/StVwContainer';
@@ -9,14 +9,16 @@ import { auth } from 'fb/firebase';
 import { logout } from '../redux/modules/authSlice';
 
 const Header = () => {
-  const user = useSelector((state) => state.auth.users);
+  const user = useSelector((state) => state.auth.targetUser);
   const userProfile = !!user;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleLogout = async () => {
     try {
       await signOut(auth);
       dispatch(logout());
       alert('로그아웃 되셨습니다.');
+      navigate('/');
     } catch (error) {
       console.error('로그아웃 실패', error);
       alert('알 수 없는 오류가 발생하였습니다.');
