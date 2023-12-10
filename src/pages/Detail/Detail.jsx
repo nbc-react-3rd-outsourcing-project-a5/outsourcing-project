@@ -38,9 +38,7 @@ function SamplePrevArrow(props) {
 
 const Detail = () => {
   const { id } = useParams();
-  console.log(id);
   const festival = useFestival();
-  console.log(festival);
 
   useEffect(() => {
     festival.get(id);

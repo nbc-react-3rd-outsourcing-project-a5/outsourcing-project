@@ -21,7 +21,6 @@ export default function Router() {
           <Route path="detail/edit/:id" element={<FestivalRegistration />} />
           <Route path="user" element={<User />} />
           <Route path="*" element={<Navigate replace to="/" />} />
-          <Route path="/detail/:id" element={<Detail />} />
         </Route>
         <Route>
           <Route path="auth" element={<Auth />} />

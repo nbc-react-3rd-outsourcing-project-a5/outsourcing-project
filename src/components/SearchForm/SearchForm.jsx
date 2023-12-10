@@ -10,14 +10,14 @@ import { useInput } from 'hooks';
 import FormSelect from './FormSelect';
 import { collection, getDocs, where } from 'firebase/firestore';
 import { db } from 'fb/firebase';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { format, isBefore } from 'date-fns';
 
 export default function SearchForm() {
-  const navigate = useNavigate();
   const [startDate, handleChangeStartDate] = useDate();
   const [endDate, handleChangeEndDate] = useDate();
-  const [region, onSelectRegion] = useInput();
-  const [city, onSelectCity] = useInput();
+  const [region, onSelectRegion, onResetRegion] = useInput();
+  const [city, onSelectCity, onResetCity] = useInput();
   const [searchResult, setSearchResult] = useState([]);
   const regionNameList = regionList.map((n) => n.name);
   const regionCityList = region && regionList.find((n) => n.name === region).city;
@@ -25,6 +25,7 @@ export default function SearchForm() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
     const data = {
       startDate,
       endDate,
@@ -55,76 +56,94 @@ export default function SearchForm() {
     fetchData();
   };
 
-  const handleMovingPage = () => {
-    const selectedItem = searchResult.find((item) => item.address === address);
-    if (selectedItem) {
-      navigate(`detail/${selectedItem.id}`);
-      console.log(selectedItem.id);
-    }
+  const handleResetButton = () => {
+    // 날짜 필터 초기화
+    handleChangeStartDate(new Date());
+    handleChangeEndDate(new Date());
+
+    // 지역 필터 초기화 => 작동 X custom hook을 reset 하는 방법..
+    onResetRegion();
+    onResetCity();
+
+    // 검색 결과 초기화
+    setSearchResult([]);
   };
+
   return (
-    <StForm onSubmit={onSubmit}>
-      <StFilterBox>
-        <StDate>
-          <label>날짜</label>
-          <StDateWrapper>
+    <>
+      <StForm onSubmit={onSubmit}>
+        <StFilterBox>
+          <StDate>
+            <label>날짜</label>
+            <StDateWrapper>
+              <div>
+                <StDatePicker
+                  locale={ko}
+                  dateFormat="yyyy-MM-dd"
+                  selected={startDate}
+                  onChange={handleChangeStartDate}
+                  selectsStartyarn
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              </div>
+              -
+              <div>
+                <StDatePicker
+                  locale={ko}
+                  dateFormat="yyyy-MM-dd"
+                  selected={endDate}
+                  onChange={handleChangeEndDate}
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                  minDate={startDate}
+                />
+              </div>
+            </StDateWrapper>
+          </StDate>
+          <StLocation>
+            <label>지역</label>
             <div>
-              <StDatePicker
-                locale={ko}
-                dateFormat="yyyy-MM-dd"
-                selected={startDate}
-                onChange={handleChangeStartDate}
-                selectsStart
-                startDate={startDate}
-                endDate={endDate}
-              />
+              <FormSelect listData={regionNameList} onChange={onSelectRegion} />
+              <FormSelect listData={regionCityList} onChange={onSelectCity} />
             </div>
-            -
-            <div>
-              <StDatePicker
-                locale={ko}
-                dateFormat="yyyy-MM-dd"
-                selected={endDate}
-                onChange={handleChangeEndDate}
-                selectsEnd
-                startDate={startDate}
-                endDate={endDate}
-                minDate={startDate}
-              />
-            </div>
-          </StDateWrapper>
-        </StDate>
-        <StLocation>
-          <label>지역</label>
-          <div>
-            <FormSelect listData={regionNameList} onChange={onSelectRegion} />
-            <FormSelect listData={regionCityList} onChange={onSelectCity} />
-          </div>
-        </StLocation>
-      </StFilterBox>
-      <StButtonWrapper>
-        <button type="submit">검색</button>
-        <span>
-          필터링 초기화
-          <img src={resetIcon} alt="초기화 아이콘" />
-        </span>
-      </StButtonWrapper>
-      {
-        <div>
-          {searchResult
+          </StLocation>
+        </StFilterBox>
+        <StButtonWrapper>
+          <button type="submit">검색</button>
+          <span onClick={handleResetButton} type="reset">
+            필터링 초기화
+            <img src={resetIcon} alt="초기화 아이콘" />
+          </span>
+        </StButtonWrapper>
+      </StForm>
+      <StSearchResultBox>
+        {searchResult.length > 0 ? (
+          searchResult
             .filter((item) => item.address === address)
             .map((item) => {
+              const formattedStartDate = format(item.startDate.toDate(), 'yyyy-MM-dd');
+              const formattedEndDate = format(item.endDate.toDate(), 'yyyy-MM-dd');
+              const hasFestivalEnded = isBefore(new Date(), item.endDate.toDate());
               return (
-                <div key={item.id}>
-                  <h2>
-                    축제명: <span onClick={handleMovingPage}>{item.name}</span>
-                  </h2>
-                </div>
+                <li key={item.id}>
+                  <Link key={item.id} to={`/detail/${item.id}`}>
+                    <h2>{item.name}</h2>
+                  </Link>
+                  <span className="festival-date">
+                    {formattedStartDate} ~ {formattedEndDate}
+                    &nbsp; &nbsp;
+                    {hasFestivalEnded || <span style={{ color: 'red' }}>(축제 종료)</span>}
+                  </span>
+                </li>
               );
-            })}
-        </div>
-      }
-    </StForm>
+            })
+        ) : (
+          <p style={{ textAlign: 'center' }}>검색 결과가 없습니다.</p>
+        )}
+      </StSearchResultBox>
+    </>
   );
 }
 
@@ -230,5 +249,33 @@ const StButtonWrapper = styled.div`
   & img {
     width: 14px;
     margin-left: 10px;
+  }
+`;
+const StSearchResultBox = styled.ul`
+  width: 100%;
+  margin: 10px;
+
+  & li {
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+  }
+
+  & img {
+    width: 200px;
+    height: 100%;
+  }
+
+  & h2 {
+    display: inline-block;
+    font-size: 1rem;
+    margin-right: 20px;
+  }
+  & .festival-date {
+    margin-right: 20px;
+  }
+  & span {
+    font-size: 14px;
+    color: #888;
   }
 `;
