@@ -8,6 +8,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { login } from '../../redux/modules/authSlice';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
+import tree from '../SearchForm/assets/imageaa.png';
 
 export default function GenernalLogin() {
   const dispatch = useDispatch();
@@ -72,6 +73,10 @@ export default function GenernalLogin() {
   return (
     <StLoginCardContainer>
       <StLoginCard>
+        <StHomeBtn>
+          <StGoHomeLink to={'/'}>Winter Wonderland Guide</StGoHomeLink>
+          <img src={tree} alt="" />
+        </StHomeBtn>
         <div>
           <h2>환영합니다!</h2>
           <p>일반회원 로그인</p>
@@ -161,4 +166,26 @@ const StLink = styled(Link)`
 
 const StP = styled.p`
   margin-bottom: 5px;
+`;
+
+const StHomeBtn = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  & > img {
+    width: 10%;
+    height: 45px;
+  }
+`;
+const StGoHomeLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  margin-right: 5px;
+  border: none;
+  background-color: transparent;
+  color: white;
+  font-size: 28px;
+  font-weight: 700;
+  cursor: pointer;
 `;
