@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { festivalStorageRef } from 'fb/firebase';
+import { toast } from 'react-toastify';
 
 const accepted = {
   type: (targetFile) =>
@@ -12,10 +13,10 @@ export const useImageFile = () => {
 
   const validateFile = useCallback((file) => {
     if (accepted.type(file) !== true) {
-      return alert(accepted.type(file));
+      return toast.warning(accepted.type(file));
     }
     if (accepted.size(file) !== true) {
-      return alert(accepted.size(file));
+      return toast.warning(accepted.size(file));
     }
     return accepted.type(file) && accepted.size(file);
   }, []);
