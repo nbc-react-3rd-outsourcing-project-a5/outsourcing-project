@@ -18,7 +18,7 @@ export default function FestivalRegistrationForm() {
   const [endDate, handleChangeEndDate] = useDate();
   const [localImageFiles, handleUploadImageFiles] = useImageFile();
   const organizerProfile = useSelector((state) => state.auth.targetUser);
-  const organizer = { id: uuid(), name: organizerProfile.name };
+  const organizer = { id: uuid(), name: organizerProfile?.name };
   const navigate = useNavigate();
 
   // console.log(organizer);

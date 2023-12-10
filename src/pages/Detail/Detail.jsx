@@ -1,12 +1,13 @@
 import StContainer from 'components/common/StContainer';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import { useFestival } from 'hooks';
 import Comments from 'components/Comments/Comments';
+import { useFestival, useKakaoMap, useKakaoMapMarker } from 'hooks';
+import KakaoMap from 'components/KakaoMap/KakaoMap';
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -39,6 +40,20 @@ function SamplePrevArrow(props) {
 const Detail = () => {
   const { id } = useParams();
   const festival = useFestival();
+  const [selectImageNum, setSelectImageNum] = useState(1);
+  const { mapState, mapController } = useKakaoMap();
+  const { createMarkers, showMarkers, showGeoLocationMarker } = useKakaoMapMarker();
+
+  useEffect(() => {
+    //TODO : DB에서 데이터 받은거 CreateMarkers로 넘겨주기
+    // marker : {
+    //   [33,125]
+    // }
+    // createMarkers(festival.responseData.marker);
+
+    console.log();
+  }, [festival]);
+
   useEffect(() => {
     festival.get(id);
   }, []);
@@ -69,7 +84,7 @@ const Detail = () => {
             <StShare>공유하기</StShare>
             {festival?.responseData.image && (
               <StBannerImgWrap>
-                <StBanner src={festival?.responseData.image[1]?.url} />
+                <StBanner src={festival?.responseData.image[selectImageNum]?.url} />
               </StBannerImgWrap>
             )}
           </StInfo>
@@ -80,8 +95,8 @@ const Detail = () => {
           <StImgSliderBox>
             <StContentTitle>축제 이미지</StContentTitle>
             <StImgSlider {...settings}>
-              {festival?.responseData.image?.slice(1).map((item, index) => (
-                <StImgSlide key={index}>
+              {festival?.responseData.image?.map((item, index) => (
+                <StImgSlide key={index} onClick={() => setSelectImageNum(index)}>
                   <StImg src={item.url} alt={`Image ${index + 2}`} />
                 </StImgSlide>
               ))}
@@ -89,7 +104,10 @@ const Detail = () => {
           </StImgSliderBox>
           <StMapBox>
             <StContentTitle>오시는길</StContentTitle>
-            {/* 카카오맵  들어갈 자리 */}
+            <KakaoMap mapState={mapState} onClick={mapController.handleClickSetMarker}>
+              {showGeoLocationMarker()}
+              {/* {showMarkers()} */}
+            </KakaoMap>
             <StMap></StMap>
           </StMapBox>
         </StMain>

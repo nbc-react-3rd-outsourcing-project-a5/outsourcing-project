@@ -149,6 +149,7 @@ export const festivalSlice = createSlice({
     builder
       .addCase(__getFestival.pending, (state) => {
         state.isLoading = true;
+        state.targetFestival = [];
       })
       .addCase(__getFestival.fulfilled, (state, action) => {
         state.isLoading = false;

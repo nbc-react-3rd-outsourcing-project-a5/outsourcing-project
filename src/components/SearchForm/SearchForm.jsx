@@ -14,12 +14,13 @@ import { Link } from 'react-router-dom';
 import { format, isBefore } from 'date-fns';
 
 export default function SearchForm() {
+  const regionNameList = regionList.map((n) => n.name);
   const [startDate, handleChangeStartDate] = useDate();
   const [endDate, handleChangeEndDate] = useDate();
-  const [region, onSelectRegion, onResetRegion] = useInput();
+  const [region, onSelectRegion, onResetRegion] = useInput(regionNameList[0]);
   const [city, onSelectCity, onResetCity] = useInput();
   const [searchResult, setSearchResult] = useState([]);
-  const regionNameList = regionList.map((n) => n.name);
+
   const regionCityList = region && regionList.find((n) => n.name === region).city;
   const address = `${region} ${city}`;
 
@@ -106,7 +107,7 @@ export default function SearchForm() {
             <label>지역</label>
             <div>
               <FormSelect listData={regionNameList} onChange={onSelectRegion} />
-              <FormSelect listData={regionCityList} onChange={onSelectCity} />
+              <FormSelect listData={['선택안함', ...regionCityList]} onChange={onSelectCity} />
             </div>
           </StLocation>
         </StFilterBox>
