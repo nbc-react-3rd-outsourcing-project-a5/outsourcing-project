@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router';
 import { doc, setDoc } from '@firebase/firestore';
 import Login from './Login';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function OrganizerLogin() {
   const dispatch = useDispatch();
@@ -26,12 +27,12 @@ export default function OrganizerLogin() {
 
     if (switchLogin) {
       if (!email || !password || !userName || !checkPassword) {
-        alert('빈 칸 없이 입력해주세요!');
+        toast.warning('빈 칸 없이 입력해주세요!');
         return;
       }
     } else {
       if (!email || !password) {
-        alert('이메일 또는 비밀번호를 입력해주세요!');
+        toast.warning('이메일 또는 비밀번호를 입력해주세요!');
         return;
       }
     }
@@ -39,7 +40,7 @@ export default function OrganizerLogin() {
       if (switchLogin) {
         //회원가입;
         if (!(checkPassword === password)) {
-          alert('비밀번호가 같지 않습니다!');
+          toast.warning('비밀번호가 같지 않습니다!');
           return;
         }
         const response = await createUserWithEmailAndPassword(auth, email, password);
@@ -57,16 +58,16 @@ export default function OrganizerLogin() {
         setCheckPassword('');
         setPhoneNumber('');
         setSwitchLogin(false);
-        alert('회원가입이 완료되었습니다.');
+        toast.success('회원가입이 완료되었습니다.');
       } else {
         //로그인
         const signIn = await signInWithEmailAndPassword(auth, email.trim(), password);
         dispatch(login(signIn.user.providerData[0]));
-        alert('로그인 되었습니다.');
+        toast.success('로그인 되었습니다.');
         navigate('/');
       }
     } catch (err) {
-      alert('알 수 없는 오류가 발생하였습니다.');
+      toast.error('알 수 없는 오류가 발생하였습니다.');
     }
   };
 

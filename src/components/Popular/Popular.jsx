@@ -8,6 +8,7 @@ import StContainer from 'components/common/StContainer';
 import { useFestival } from 'hooks';
 import { collection } from '@firebase/firestore';
 import { db } from 'fb/firebase';
+import { Link } from 'react-router-dom';
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -72,16 +73,18 @@ export default function Popular() {
         <StImageSlider {...settings}>
           {festival.snapshotData.map((item) => {
             return (
-              <StImageBox key={item.docID}>
-                <img src={item.image[0].url} alt="축제 이미지" />
-                <StLocation>📍{item.address}</StLocation>
-                <StDescription>
-                  <h3>{item.name}</h3>
-                  <p>
-                    {item.startDate} - {item.endDate}
-                  </p>
-                </StDescription>
-              </StImageBox>
+              <StLink key={item.docID} to={`/detail/${item.docID}`}>
+                <StImageBox key={item.docID}>
+                  <img src={item.image[0].url} alt="축제 이미지" />
+                  <StLocation>📍{item.address}</StLocation>
+                  <StDescription>
+                    <h3>{item.name}</h3>
+                    <p>
+                      {item.startDate} - {item.endDate}
+                    </p>
+                  </StDescription>
+                </StImageBox>
+              </StLink>
             );
           })}
         </StImageSlider>
@@ -138,8 +141,10 @@ const StImageSlider = styled(Slider)`
   }
 `;
 
+const StLink = styled(Link)``;
+
 const StImageBox = styled.div`
-  width: 240px;
+  width: 100%;
   display: flex;
   flex-direction: column;
 

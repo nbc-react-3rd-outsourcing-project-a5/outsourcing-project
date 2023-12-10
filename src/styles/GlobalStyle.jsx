@@ -6,6 +6,7 @@ const GlobalStyle = createGlobalStyle`
     ${reset}
     body {
         font-family: 'Pretendard', sans-serif;
+        background-color: #EFEFEF;
     }
     *{
         box-sizing: border-box;
