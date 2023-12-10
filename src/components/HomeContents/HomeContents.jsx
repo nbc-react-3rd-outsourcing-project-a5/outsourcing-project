@@ -3,12 +3,14 @@ import StContainer from 'components/common/StContainer';
 import { db } from 'fb/firebase';
 import { useFestival } from 'hooks';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export default function HomeContents() {
   const [oncoming, setOncoming] = useState(true);
   const festival = useFestival();
+  const { isLoading, snapshotFestivals } = useSelector((state) => state.festivalSlice);
 
   useEffect(() => {
     const fetchFestivals = async () => {
@@ -62,11 +64,11 @@ export default function HomeContents() {
         </StP>
       </StCategory>
       <StList>
-        {filterFestivalsByDate(festival.snapshotData, oncoming).map((item) => {
+        {filterFestivalsByDate(snapshotFestivals, oncoming).map((item) => {
           return (
             <StLink key={item.docID} to={`/detail/${item.docID}`}>
               <StContentImgWrap>
-                <StContentsImgs src={item.image[0].url} alt="축제 썸네일 이미지" />
+                <StContentsImgs src={item.image[0]?.url} alt="축제 썸네일 이미지" />
               </StContentImgWrap>
               <StLocation>📍{item.address}</StLocation>
               <StContentTitle>{item.name}</StContentTitle>

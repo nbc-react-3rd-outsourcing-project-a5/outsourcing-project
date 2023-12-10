@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import StContainer from './common/StContainer';
 import VwContainer from './common/StVwContainer';
@@ -7,19 +7,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { signOut } from 'firebase/auth';
 import { auth } from 'fb/firebase';
 import { logout } from '../redux/modules/authSlice';
+import { toast } from 'react-toastify';
 
 const Header = () => {
-  const user = useSelector((state) => state.auth.users);
+  const user = useSelector((state) => state.auth.targetUser);
   const userProfile = !!user;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleLogout = async () => {
     try {
       await signOut(auth);
       dispatch(logout());
-      alert('로그아웃 되셨습니다.');
+      navigate('/');
+      toast.success('로그아웃 되셨습니다.');
     } catch (error) {
       console.error('로그아웃 실패', error);
-      alert('알 수 없는 오류가 발생하였습니다.');
+      toast.error('알 수 없는 오류가 발생하였습니다.');
     }
   };
   return (
@@ -41,9 +44,9 @@ const Header = () => {
                 </svg>
                 내 주변 축제
               </StToMapLink>
+              {user?.organizer ? <StLoginLink to={'/registration'}>축제 등록하기</StLoginLink> : ''}
               {/* 잠시 주석처리 */}
               {/* <StSignupLink to={'/auth'}>회원가입</StSignupLink> */}
-
               {!userProfile ? (
                 <StLoginLink to={'/auth'}>로그인</StLoginLink>
               ) : (

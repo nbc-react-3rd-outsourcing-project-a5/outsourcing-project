@@ -7,6 +7,8 @@ import { auth, db } from 'fb/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { login } from '../../redux/modules/authSlice';
 import styled from 'styled-components';
+import { toast } from 'react-toastify';
+import tree from '../SearchForm/assets/imageaa.png';
 
 export default function GenernalLogin() {
   const dispatch = useDispatch();
@@ -25,12 +27,12 @@ export default function GenernalLogin() {
 
     if (switchLogin) {
       if (!email || !password || !userName || !checkPassword) {
-        alert('빈 칸 없이 입력해주세요!');
+        toast.warning('빈 칸 없이 입력해주세요!');
         return;
       }
     } else {
       if (!email || !password) {
-        alert('이메일 또는 비밀번호를 입력해주세요!');
+        toast.warning('이메일 또는 비밀번호를 입력해주세요!');
         return;
       }
     }
@@ -38,7 +40,7 @@ export default function GenernalLogin() {
       if (switchLogin) {
         //회원가입;
         if (!(checkPassword === password)) {
-          alert('비밀번호가 같지 않습니다!');
+          toast.warning('비밀번호가 같지 않습니다!');
           return;
         }
         const response = await createUserWithEmailAndPassword(auth, email, password);
@@ -55,22 +57,26 @@ export default function GenernalLogin() {
         setCheckPassword('');
         setPhoneNumber('');
         setSwitchLogin(false);
-        alert('회원가입이 완료되었습니다.');
+        toast.success('회원가입이 완료되었습니다.');
       } else {
         //로그인
         const signIn = await signInWithEmailAndPassword(auth, email.trim(), password);
         dispatch(login(signIn.user.providerData[0]));
-        alert('로그인 되었습니다.');
+        toast.success('로그인 되었습니다.');
         navigate('/');
       }
     } catch (err) {
-      alert('알 수 없는 오류가 발생하였습니다.');
+      toast.error('알 수 없는 오류가 발생하였습니다.');
     }
   };
 
   return (
     <StLoginCardContainer>
       <StLoginCard>
+        <StHomeBtn>
+          <StGoHomeLink to={'/'}>Winter Wonderland Guide</StGoHomeLink>
+          <img src={tree} alt="" />
+        </StHomeBtn>
         <div>
           <h2>환영합니다!</h2>
           <p>일반회원 로그인</p>
@@ -160,4 +166,26 @@ const StLink = styled(Link)`
 
 const StP = styled.p`
   margin-bottom: 5px;
+`;
+
+const StHomeBtn = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  & > img {
+    width: 10%;
+    height: 45px;
+  }
+`;
+const StGoHomeLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  margin-right: 5px;
+  border: none;
+  background-color: transparent;
+  color: white;
+  font-size: 28px;
+  font-weight: 700;
+  cursor: pointer;
 `;

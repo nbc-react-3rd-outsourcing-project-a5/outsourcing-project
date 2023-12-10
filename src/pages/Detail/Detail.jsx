@@ -6,6 +6,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import { useFestival } from 'hooks';
+import Comments from 'components/Comments/Comments';
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -38,7 +39,6 @@ function SamplePrevArrow(props) {
 const Detail = () => {
   const { id } = useParams();
   const festival = useFestival();
-
   useEffect(() => {
     festival.get(id);
   }, []);
@@ -93,6 +93,7 @@ const Detail = () => {
             <StMap></StMap>
           </StMapBox>
         </StMain>
+        <Comments />
       </StContainer>
     </>
   );
