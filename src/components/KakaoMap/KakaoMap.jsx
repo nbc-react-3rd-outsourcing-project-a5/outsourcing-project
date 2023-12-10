@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
-import StContainer from 'components/common/StContainer';
-import { Map, CustomOverlayMap } from 'react-kakao-maps-sdk';
+import React from 'react';
+import { Map, CustomOverlayMap, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
 import styled from 'styled-components';
-function KakaoMap({ mapState, children, onClick }) {
+function KakaoMap({ mapState, children, onClick, className, mapControl = false }) {
   return (
-    <StContainer>
+    <StWrap className={className}>
       <Map
         center={mapState.center}
         level={mapState.level} // 지도의 확대 레벨
@@ -14,10 +13,19 @@ function KakaoMap({ mapState, children, onClick }) {
         onClick={onClick}
         ref={mapState.mapRef}
       >
+        {mapControl && (
+          <>
+            <MapTypeControl position={'TOPRIGHT'} />
+            <ZoomControl position={'RIGHT'} />
+          </>
+        )}
+
         {children && <CustomOverlayMap position={mapState.center}>{children}</CustomOverlayMap>}
       </Map>
-    </StContainer>
+    </StWrap>
   );
 }
+
+const StWrap = styled.section``;
 
 export default KakaoMap;

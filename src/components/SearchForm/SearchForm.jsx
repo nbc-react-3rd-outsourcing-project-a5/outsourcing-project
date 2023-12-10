@@ -158,7 +158,6 @@ const StForm = styled.form`
   gap: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  margin: 10px;
 `;
 
 const StFilterBox = styled.div`
