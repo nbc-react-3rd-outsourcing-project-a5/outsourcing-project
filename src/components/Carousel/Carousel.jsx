@@ -49,8 +49,8 @@ function SamplePrevArrow(props) {
         width: '40px',
         height: '40px',
         top: 'calc(50% - 20px)',
-        display: 'block',
         left: '5%'
+        display: 'block',
       }}
       width="40"
       height="40"
