@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+import { useState } from 'react';
 import resetIcon from './assets/resetIcon.png';
 import { ko } from 'date-fns/locale';
 import DatePicker from 'react-datepicker';
@@ -7,7 +8,7 @@ import regionList from 'data/regionList';
 import { useDate } from 'hooks';
 import { useInput } from 'hooks';
 import FormSelect from './FormSelect';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, where } from 'firebase/firestore';
 import { db } from 'fb/firebase';
 
 export default function SearchForm() {
@@ -15,34 +16,42 @@ export default function SearchForm() {
   const [endDate, handleChangeEndDate] = useDate();
   const [region, onSelectRegion] = useInput();
   const [city, onSelectCity] = useInput();
+  const [searchResult, setSearchResult] = useState(null);
+  console.log(searchResult);
+  const [isSearching, setIsSearching] = useState(false);
   const regionNameList = regionList.map((n) => n.name);
   const regionCityList = region && regionList.find((n) => n.name === region).city;
+  const address = `${region} ${city}`;
 
   const onSubmit = async (e) => {
     e.preventDefault();
     const data = {
       startDate,
       endDate,
-      region,
-      city
+      address
     };
-    console.log(data); // 부산광역시 해운대구
+
     const fetchData = async () => {
       // collection: festival -> 모든 문서 가져오기
-      const q = query(
-        collection(db, 'festival'),
-        where('startDate', '==', data.startDate),
-        where('endDate', '==', data.endDate),
-        where('region', '==', data.region),
-        where('city', '==', data.city)
-      );
-      const querySnapshot = await getDocs(q);
 
-      const result = [];
+      try {
+        // festival 콜렉션의 모든 문서 가져오기
+        const querySnapshot = await getDocs(
+          collection(db, 'festival'),
+          where('startDate', '>=', data.startDate),
+          where('endDate', '<=', data.endDate),
+          where('address', '==', data.address)
+        );
 
-      querySnapshot.forEach((doc) => {
-        result.push({ id: doc.id, ...doc.data() });
-      });
+        const result = [];
+        querySnapshot.forEach((doc) => {
+          result.push({ id: doc.id, ...doc.data() });
+        });
+        setSearchResult(result);
+        console.log(result);
+      } catch (error) {
+        console.error('쿼리 실패: ', error);
+      }
     };
     fetchData();
   };
@@ -56,7 +65,7 @@ export default function SearchForm() {
             <div>
               <StDatePicker
                 locale={ko}
-                minDate={new Date()}
+                minDate={''}
                 dateFormat="yyyy-MM-dd"
                 selected={startDate}
                 onChange={handleChangeStartDate}
@@ -95,6 +104,19 @@ export default function SearchForm() {
           <img src={resetIcon} alt="초기화 아이콘" />
         </span>
       </StButtonWrapper>
+      {isSearching ? (
+        <div>
+          {searchResult
+            .filter((item) => item.address === address)
+            .map((item) => {
+              return (
+                <>
+                  <h2>축제명: {item.name}</h2>
+                </>
+              );
+            })}
+        </div>
+      ) : null}
     </StForm>
   );
 }
