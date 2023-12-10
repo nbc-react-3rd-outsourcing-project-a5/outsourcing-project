@@ -28,7 +28,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <ToastContainer
-          position="top-right"
+          position="top-center"
           autoClose={2000}
           limit={3}
           hideProgressBar={false}
