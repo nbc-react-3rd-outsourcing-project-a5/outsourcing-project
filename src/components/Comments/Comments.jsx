@@ -1,4 +1,5 @@
 import { addDoc, deleteDoc, updateDoc, collection, getDocs, orderBy, query, doc } from '@firebase/firestore';
+import StContainer from 'components/common/StContainer';
 import { db } from 'fb/firebase';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -37,6 +38,7 @@ export default function Comments() {
       setIsLoding(false);
     }
   }, []);
+  console.log(allComments);
 
   const handleSubmitComments = async (e) => {
     e.preventDefault();
@@ -84,7 +86,7 @@ export default function Comments() {
   const handleCompletionComment = async (id) => {
     try {
       const completion = { ...findComments, edit: false, comments: editComments };
-      console.log(completion);
+      // console.log(completion);
       const changeComment = allComments.map((item) => {
         return item.id === id ? { ...item, edit: !item.edit, comments: editComments } : item;
       });
@@ -101,76 +103,78 @@ export default function Comments() {
     return <div>로딩 중...</div>;
   }
   return (
-    <StCommentsContainer>
-      <StComment>후기</StComment>
-      <form onSubmit={handleSubmitComments}>
-        {user?.organizer || !user ? (
-          ''
+    <StContainer>
+      <StCommentsContainer>
+        <StComment>후기</StComment>
+        <form onSubmit={handleSubmitComments}>
+          {user?.organizer || !user ? (
+            ''
+          ) : (
+            <>
+              <input placeholder="후기를 입력해주세요!" value={comments} onChange={handleOnchangeComments} />
+              <StCommentBtn $padding="20px" type="submit">
+                등록
+              </StCommentBtn>
+            </>
+          )}
+        </form>
+        {filterComments.length === 0 ? (
+          <div>아직 등록된 리뷰가 없습니다!</div>
         ) : (
-          <>
-            <input placeholder="후기를 입력해주세요!" value={comments} onChange={handleOnchangeComments} />
-            <StCommentBtn $padding="20px" type="submit">
-              등록
-            </StCommentBtn>
-          </>
-        )}
-      </form>
-      {filterComments.length === 0 ? (
-        <div>아직 등록된 리뷰가 없습니다!</div>
-      ) : (
-        <ul>
-          {filterComments.map((item) => {
-            return (
-              <li key={item.uuid}>
-                <StUserName>{item.name}</StUserName>
-                <StCommentDate>
-                  {item.edit ? (
-                    <StTextarea rows={4} value={editComments} onChange={handleOnchangeEditComments}></StTextarea>
-                  ) : (
-                    <p>{item.comments}</p>
-                  )}
-                  <p>
-                    {new Date(item.createdAt).toLocaleDateString('ko', {
-                      year: '2-digit',
-                      month: '2-digit',
-                      day: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </p>
-                </StCommentDate>
-                {user?.email === item.email || user === null ? (
-                  <StDelEditBtn>
+          <ul>
+            {filterComments.map((item) => {
+              return (
+                <li key={item.uuid}>
+                  <StUserName>{item.name}</StUserName>
+                  <StCommentDate>
                     {item.edit ? (
-                      <StCommentBtn onClick={() => handleCompletionComment(item.id)} $padding="10px" type="button">
-                        완료
-                      </StCommentBtn>
+                      <StTextarea rows={4} value={editComments} onChange={handleOnchangeEditComments}></StTextarea>
                     ) : (
-                      <>
-                        <StCommentBtn onClick={() => handleEditComment(item.uuid)} $padding="10px" type="button">
-                          수정
-                        </StCommentBtn>
-                        <StCommentBtn
-                          onClick={() => {
-                            handleDeleteComment(item.id);
-                          }}
-                          $padding="10px"
-                          type="button"
-                        >
-                          삭제
-                        </StCommentBtn>
-                      </>
+                      <p>{item.comments}</p>
                     )}
-                  </StDelEditBtn>
-                ) : (
-                  ''
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      )}
-    </StCommentsContainer>
+                    <p>
+                      {new Date(item.createdAt).toLocaleDateString('ko', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </p>
+                  </StCommentDate>
+                  {user?.email === item.email || user === null ? (
+                    <StDelEditBtn>
+                      {item.edit ? (
+                        <StCommentBtn onClick={() => handleCompletionComment(item.id)} $padding="10px" type="button">
+                          완료
+                        </StCommentBtn>
+                      ) : (
+                        <>
+                          <StCommentBtn onClick={() => handleEditComment(item.uuid)} $padding="10px" type="button">
+                            수정
+                          </StCommentBtn>
+                          <StCommentBtn
+                            onClick={() => {
+                              handleDeleteComment(item.id);
+                            }}
+                            $padding="10px"
+                            type="button"
+                          >
+                            삭제
+                          </StCommentBtn>
+                        </>
+                      )}
+                    </StDelEditBtn>
+                  ) : (
+                    ''
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </StCommentsContainer>
+    </StContainer>
   );
 }
 
@@ -195,7 +199,7 @@ const StCommentsContainer = styled.div`
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 15px;
-    border: 1px solid black;
+    border: 2px solid #126136;
   }
 
   form {
@@ -208,6 +212,7 @@ const StCommentsContainer = styled.div`
 
   input {
     border-radius: 10px;
+    border: 2px solid #126136;
     font-weight: 600;
     font-size: large;
     width: 70%;
@@ -218,22 +223,27 @@ const StCommentsContainer = styled.div`
 
 const StCommentBtn = styled.button`
   margin-left: 10px;
+  padding: 5px;
+  border: none;
   border-radius: 10px;
+  background-color: #126136;
+  color: white;
   grid-area: btn;
   font-size: 15px;
   letter-spacing: 1px;
-  transition: all 0.4s;
   font-weight: 700;
   width: 9%;
 
+  cursor: pointer;
+  transition: all 0.4s;
   &:hover {
-    color: black;
+    background-color: #dc1920;
   }
 `;
 
 const StUserName = styled.p`
   font-weight: 600;
-  font-size: 18px;
+  font-size: 20px;
   text-align: start;
 `;
 
@@ -243,7 +253,7 @@ const StCommentDate = styled.div`
   margin: 5px 0px 15px 0px;
 
   p {
-    font-size: medium;
+    font-size: 17px;
   }
 `;
 
@@ -263,4 +273,7 @@ const StDelEditBtn = styled.div`
 const StTextarea = styled.textarea`
   width: 70%;
   resize: none;
+  outline: none;
+  padding: 5px 10px;
+  border-radius: 10px;
 `;
