@@ -10,28 +10,62 @@ import styled from 'styled-components';
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
   return (
-    <div
+    <svg
       className={className}
+      onClick={onClick}
       style={{
         ...style,
-        width: '20px',
-        top: '50%',
+        width: '40px',
+        height: '40px',
+        top: 'calc(50% - 20px)',
         display: 'block',
-        right: '3%'
+        right: '5%'
       }}
-      onClick={onClick}
-    />
+      width="40"
+      height="40"
+      viewBox="0 0 512 512"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill="#ffffff"
+        d="M256.25 16.042c-132.548 0-240 107.451-240 240s107.452 240 240 240s240-107.452 240-240s-107.45-240-240-240ZM403.328 403.12A207.253 207.253 0 1 1 447.917 337a207.364 207.364 0 0 1-44.589 66.12Z"
+      />
+      <path
+        fill="#ffffff"
+        d="m239.637 164.987l75.053 75.054H128.137v32H314.69l-75.053 75.054l22.627 22.627l113.681-113.681L262.264 142.36l-22.627 22.627z"
+      />
+    </svg>
   );
 }
 
 function SamplePrevArrow(props) {
   const { className, style, onClick } = props;
   return (
-    <div
+    <svg
       className={className}
-      style={{ ...style, width: '20px', top: '50%', left: '2%', display: 'block' }}
       onClick={onClick}
-    />
+      style={{
+        ...style,
+        width: '40px',
+        height: '40px',
+        top: 'calc(50% - 20px)',
+        display: 'block',
+        left: '5%'
+      }}
+      width="40"
+      height="40"
+      viewBox="0 0 512 512"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill="#ffffff"
+        d="M256 16.042c-132.548 0-240 107.451-240 240s107.452 240 240 240s240-107.452 240-240s-107.452-240-240-240ZM403.078 403.12A207.253 207.253 0 1 1 447.667 337a207.364 207.364 0 0 1-44.589 66.12Z"
+      />
+      <path
+        fill="#ffffff"
+        d="m272.614 164.987l-22.628-22.627l-113.681 113.681l113.681 113.681l22.628-22.627l-75.054-75.054H385v-32H197.56l75.054-75.054z"
+      />
+    </svg>
   );
 }
 
@@ -184,7 +218,7 @@ const StLocation = styled.p`
 const StSlideNumber = styled.div`
   position: absolute;
   left: 100px;
-  bottom: 80px;
+  bottom: 160px;
   & span {
     color: #fff;
     opacity: 0.5;
