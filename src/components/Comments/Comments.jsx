@@ -20,7 +20,7 @@ export default function Comments() {
   const handleOnchangeEditComments = (e) => setEditComments(e.target.value);
   const filterComments = allComments.filter((item) => item.festivalId === id);
   // console.log(filterComments);
-  // console.log(users);
+  console.log(user);
   useEffect(() => {
     if (!isLoading) {
       getDocs(query(collection(db, 'comments'), orderBy('createdAt', 'desc')))
@@ -142,7 +142,7 @@ export default function Comments() {
                       })}
                     </p>
                   </StCommentDate>
-                  {user?.email === item.email || user === null ? (
+                  {user?.email === item.email && user !== null ? (
                     <StDelEditBtn>
                       {item.edit ? (
                         <StCommentBtn onClick={() => handleCompletionComment(item.id)} $padding="10px" type="button">
