@@ -142,7 +142,7 @@ export default function Comments() {
                       })}
                     </p>
                   </StCommentDate>
-                  {user?.email === item.email || !!user ? (
+                  {user?.email === item.email && user !== null ? (
                     <StDelEditBtn>
                       {item.edit ? (
                         <StCommentBtn onClick={() => handleCompletionComment(item.id)} $padding="10px" type="button">
