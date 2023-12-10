@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import StContainer from './common/StContainer';
@@ -18,6 +18,7 @@ const Header = () => {
     try {
       await signOut(auth);
       dispatch(logout());
+      navigate('/');
       toast.success('로그아웃 되셨습니다.');
     } catch (error) {
       console.error('로그아웃 실패', error);
@@ -43,9 +44,9 @@ const Header = () => {
                 </svg>
                 내 주변 축제
               </StToMapLink>
+              {user?.organizer ? <StLoginLink to={'/registration'}>축제 등록하기</StLoginLink> : ''}
               {/* 잠시 주석처리 */}
               {/* <StSignupLink to={'/auth'}>회원가입</StSignupLink> */}
-
               {!userProfile ? (
                 <StLoginLink to={'/auth'}>로그인</StLoginLink>
               ) : (

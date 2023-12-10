@@ -4,6 +4,7 @@ import { db } from 'fb/firebase';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import uuid from 'react-uuid';
 import styled from 'styled-components';
 
@@ -54,7 +55,7 @@ export default function Comments() {
 
     const collectionRef = collection(db, 'comments');
     const res = await addDoc(collectionRef, newComment);
-    alert('리뷰가 등록되었습니다!');
+    toast.success('리뷰가 등록되었습니다!');
     setComments('');
     setAllComments([
       {
@@ -69,7 +70,7 @@ export default function Comments() {
     const comments = allComments.filter((item) => item.id !== id);
 
     if (!window.confirm('리뷰를 삭제하시겠습니까?')) return;
-    alert('삭제되었습니다.');
+    toast.success('삭제되었습니다.');
     const commentRef = doc(db, 'comments', id);
     await deleteDoc(commentRef);
     setAllComments(comments);
@@ -94,8 +95,9 @@ export default function Comments() {
       await updateDoc(collectionRef, completion);
 
       setAllComments(changeComment);
+      toast.success('리뷰 수정을 완료했습니다.');
     } catch (error) {
-      alert('리뷰 수정에 실패했습니다.');
+      toast.error('리뷰 수정에 실패했습니다.');
     }
   };
 

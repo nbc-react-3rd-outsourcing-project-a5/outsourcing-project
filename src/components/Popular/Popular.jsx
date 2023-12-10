@@ -9,6 +9,7 @@ import { useFestival } from 'hooks';
 import { collection } from '@firebase/firestore';
 import { db } from 'fb/firebase';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -113,6 +114,7 @@ export default function Popular() {
     prevArrow: <SamplePrevArrow />
   };
 
+  const { isLoading, snapshotFestivals } = useSelector((state) => state.festivalSlice);
   const festival = useFestival();
 
   useEffect(() => {
@@ -128,6 +130,10 @@ export default function Popular() {
     fetchFestivals();
   }, []);
 
+  if (isLoading) {
+    return <div>로딩 중..</div>;
+  }
+
   return (
     <StContainer>
       <StContainerInner>
@@ -135,7 +141,7 @@ export default function Popular() {
           <h2>인기 축제</h2>
         </StTitle>
         <StImageSlider {...settings}>
-          {festival.snapshotData.map((item) => {
+          {snapshotFestivals.map((item) => {
             return (
               <StLink key={item.docID} to={`/detail/${item.docID}`}>
                 <StImageBox key={item.docID}>
