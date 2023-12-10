@@ -1,25 +1,8 @@
 import React, { useEffect } from 'react';
 import StContainer from 'components/common/StContainer';
-import { Map } from 'react-kakao-maps-sdk';
+import { Map, CustomOverlayMap } from 'react-kakao-maps-sdk';
+import styled from 'styled-components';
 function KakaoMap({ mapState, children, onClick }) {
-  const positions = [
-    {
-      title: '카카오',
-      latlng: { lat: 33.450705, lng: 126.570677 }
-    },
-    {
-      title: '생태연못',
-      latlng: { lat: 33.450936, lng: 126.569477 }
-    },
-    {
-      title: '텃밭',
-      latlng: { lat: 33.450879, lng: 126.56994 }
-    },
-    {
-      title: '근린공원',
-      latlng: { lat: 33.451393, lng: 126.570738 }
-    }
-  ];
   return (
     <StContainer>
       <Map
@@ -31,7 +14,7 @@ function KakaoMap({ mapState, children, onClick }) {
         onClick={onClick}
         ref={mapState.mapRef}
       >
-        {children}
+        {children && <CustomOverlayMap position={mapState.center}>{children}</CustomOverlayMap>}
       </Map>
     </StContainer>
   );

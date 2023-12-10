@@ -49,7 +49,6 @@ export default function SearchForm() {
           result.push({ id: doc.id, ...doc.data() });
         });
         setSearchResult(result);
-        console.log(result);
       } catch (error) {
         console.error('쿼리 실패: ', error);
       }

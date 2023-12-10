@@ -21,8 +21,6 @@ export default function FestivalRegistrationForm() {
   const organizer = { id: uuid(), name: organizerProfile?.name };
   const navigate = useNavigate();
 
-  // console.log(organizer);
-
   const handleCreate = useFestival();
 
   // TODO : 수정하기에서 사용할 것

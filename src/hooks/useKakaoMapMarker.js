@@ -1,10 +1,12 @@
 import KakaoMapMarker from 'components/KakaoMap/KakaoMapMarker';
+import KakaoOverlay from 'components/KakaoMap/KakaoOverlay';
 import { useState } from 'react';
 import { useGeolocation } from './useGeolocation';
 import geoMarker from 'assets/geoMarker.png';
 export const useKakaoMapMarker = () => {
-  const [markers, setMarkers] = useState([]);
   const geoLocationData = useGeolocation();
+  const [markers, setMarkers] = useState([]);
+  const [festivalmarkers, setFestivalMarkers] = useState([]);
   const defaultMarkerData = {
     position: {
       lat: 33.450701,
@@ -44,7 +46,6 @@ export const useKakaoMapMarker = () => {
   };
 
   const showGeoLocationMarker = () => {
-    console.log(geoLocationData);
     const initData = {
       position: geoLocationData,
       title: '현재 위치',
@@ -61,5 +62,48 @@ export const useKakaoMapMarker = () => {
     return geoLocationData && <KakaoMapMarker data={geolocationMarkerData} />;
   };
 
-  return { createMarkers, showMarkers, showGeoLocationMarker };
+  const createFestivalMarkers = (array) => {
+    const markersData = array.map((n) => createMarkerData({ ...n, isOpen: false }));
+    setFestivalMarkers((prev) => [...prev, ...markersData]);
+  };
+
+  const showFestivalMarkers = () => {
+    const handleToggleOverlay = (index) => {
+      const copy = [...festivalmarkers];
+      copy[index].isOpen = !copy[index].isOpen;
+      setFestivalMarkers(copy);
+      console.log(festivalmarkers);
+    };
+
+    return festivalmarkers.map((n, i) => {
+      return (
+        <KakaoMapMarker data={n} key={`marker-${i}`} onClick={() => handleToggleOverlay(i, true)}>
+          {n.isOpen && (
+            // <div
+            //   onClick={() => {
+            //     handleToggleOverlay(i, false);
+            //   }}
+            // >
+            //   123123
+            // </div>
+            <KakaoOverlay
+              data={n}
+              onClick={() => {
+                handleToggleOverlay(i, false);
+              }}
+            />
+          )}
+        </KakaoMapMarker>
+      );
+    });
+  };
+
+  const markerController = {
+    createMarkers,
+    showMarkers,
+    showGeoLocationMarker,
+    createFestivalMarkers,
+    showFestivalMarkers
+  };
+  return markerController;
 };

@@ -42,7 +42,7 @@ const Detail = () => {
   const festival = useFestival();
   const [selectImageNum, setSelectImageNum] = useState(1);
   const { mapState, mapController } = useKakaoMap();
-  const { createMarkers, showMarkers, showGeoLocationMarker } = useKakaoMapMarker();
+  const markerController = useKakaoMapMarker();
 
   useEffect(() => {
     //TODO : DB에서 데이터 받은거 CreateMarkers로 넘겨주기
@@ -50,9 +50,13 @@ const Detail = () => {
     //   [33,125]
     // }
     // createMarkers(festival.responseData.marker);
-
-    console.log();
-  }, [festival]);
+    const test11 = [
+      {
+        title: '테스트'
+      }
+    ];
+    markerController.createFestivalMarkers(test11);
+  }, []);
 
   useEffect(() => {
     festival.get(id);
@@ -105,8 +109,8 @@ const Detail = () => {
           <StMapBox>
             <StContentTitle>오시는길</StContentTitle>
             <KakaoMap mapState={mapState} onClick={mapController.handleClickSetMarker}>
-              {showGeoLocationMarker()}
-              {/* {showMarkers()} */}
+              {markerController.showGeoLocationMarker()}
+              {markerController.showFestivalMarkers()}
             </KakaoMap>
             <StMap></StMap>
           </StMapBox>
