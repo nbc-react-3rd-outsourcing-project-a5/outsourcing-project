@@ -1,9 +1,9 @@
 import { ko } from 'date-fns/locale';
-import React, { useEffect } from 'react';
+import React from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styled from 'styled-components';
-import { useInput, useDate, useImageFile, useFestival, useAddress } from 'hooks';
+import { useInput, useDate, useImageFile, useFestival } from 'hooks';
 import uuid from 'react-uuid';
 import { uploadFiles } from 'utils/fireStorage';
 import { useSelector } from 'react-redux';
@@ -16,7 +16,6 @@ export default function FestivalRegistrationForm({ children }) {
 
   const [name, handleChangeName] = useInput();
   const [address, handleChangeAddress] = useInput();
-  // const [address, handleChangeInputText] = useAddress();
   const [description, handleChangeDescription] = useInput();
   const [startDate, handleChangeStartDate] = useDate();
   const [endDate, handleChangeEndDate] = useDate();

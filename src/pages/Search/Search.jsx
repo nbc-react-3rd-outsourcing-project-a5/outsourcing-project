@@ -12,6 +12,7 @@ function Search() {
   return (
     <>
       <StContainer>
+        <StTitle>내 주변 축제</StTitle>
         <StkakaoMap mapState={mapState} onClick={mapController.handleClickSetMarker} mapControl={true}>
           {markerController.showGeoLocationMarker()}
           {markerController.showFestivalMarkers()}
@@ -24,8 +25,15 @@ function Search() {
   );
 }
 
+const StTitle = styled.h1`
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 1em 0;
+  padding-top: 3rem;
+`;
+
 const StkakaoMap = styled(KakaoMap)`
-  margin-top: 6rem;
+  margin-top: 3rem;
   margin-bottom: 3rem;
 `;
 
