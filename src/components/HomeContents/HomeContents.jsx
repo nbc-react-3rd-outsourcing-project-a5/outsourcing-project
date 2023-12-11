@@ -47,7 +47,7 @@ export default function HomeContents() {
         return startDate <= today && endDate >= today;
       } else {
         // 진행예정인 경우
-        return endDate > today;
+        return startDate > today && endDate > today;
       }
     });
   };
