@@ -45,7 +45,7 @@ export const useKakaoMapMarker = () => {
     });
   };
 
-  const showGeoLocationMarker = () => {
+  const showGeoLocationMarker = (draggable) => {
     const initData = {
       position: geoLocationData,
       title: '현재 위치',
@@ -55,7 +55,8 @@ export const useKakaoMapMarker = () => {
           width: 44,
           height: 49
         }
-      }
+      },
+      draggable: draggable
     };
     const geolocationMarkerData = createMarkerData(initData);
 
@@ -79,13 +80,6 @@ export const useKakaoMapMarker = () => {
       return (
         <KakaoMapMarker data={n} key={`marker-${i}`} onClick={() => handleToggleOverlay(i, true)}>
           {n.isOpen && (
-            // <div
-            //   onClick={() => {
-            //     handleToggleOverlay(i, false);
-            //   }}
-            // >
-            //   123123
-            // </div>
             <KakaoOverlay
               data={n}
               onClick={() => {
