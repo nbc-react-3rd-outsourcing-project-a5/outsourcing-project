@@ -8,6 +8,7 @@ import 'slick-carousel/slick/slick.css';
 import Comments from 'components/Comments/Comments';
 import { useFestival, useKakaoMap, useKakaoMapMarker } from 'hooks';
 import KakaoMap from 'components/KakaoMap/KakaoMap';
+import { toast } from 'react-toastify';
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -80,7 +81,7 @@ const Detail = () => {
     navigator.clipboard
       .writeText(url)
       .then(() => {
-        alert('현재 게시물의 주소가 복사되었습니다.');
+        toast.success('현재 게시물 주소가 복사되었습니다.');
       })
       .catch((err) => {
         console.error('Something went wrong', err);
