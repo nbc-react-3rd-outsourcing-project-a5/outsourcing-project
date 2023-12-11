@@ -37,7 +37,6 @@ export const useKakaoMap = () => {
   };
 
   const handleClickGetPosition = (_t, mouseEvent) => {
-    console.log(1);
     setPosition({
       lat: mouseEvent.latLng.getLat(),
       lng: mouseEvent.latLng.getLng()
