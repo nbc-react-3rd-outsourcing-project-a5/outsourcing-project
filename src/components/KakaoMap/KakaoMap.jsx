@@ -10,7 +10,7 @@ function KakaoMap({ mapState, children, onClick, className, mapControl = false }
         style={mapState.style}
         isPanto={mapState.isPanto}
         draggable={mapState.draggable}
-        onClick={onClick}
+        onClick={onClick && ((_t, mouseEvent) => onClick(_t, mouseEvent))}
         ref={mapState.mapRef}
       >
         {mapControl && (

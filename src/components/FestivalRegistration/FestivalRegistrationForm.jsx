@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import Container from 'components/common/StContainer';
 
-export default function FestivalRegistrationForm({ children }) {
+export default function FestivalRegistrationForm({ position, children }) {
   // TODO : organizer 정보 가져오기
 
   const [name, handleChangeName] = useInput();
@@ -52,8 +52,8 @@ export default function FestivalRegistrationForm({ children }) {
           startDate,
           endDate,
           image,
-          overlayType: null,
-          overlay: []
+
+          position: position
         }
       };
 

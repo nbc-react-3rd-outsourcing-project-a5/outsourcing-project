@@ -50,12 +50,10 @@ const Detail = () => {
     //   [33,125]
     // }
     // createMarkers(festival.responseData.marker);
-    const test11 = [
-      {
-        title: '테스트'
-      }
-    ];
-    markerController.createFestivalMarkers(test11);
+
+    const position = festival.responseData.position;
+    mapController.changeState({ center: position });
+    markerController.createMarker({ position: position });
   }, []);
 
   useEffect(() => {
@@ -108,10 +106,7 @@ const Detail = () => {
           </StImgSliderBox>
           <StMapBox>
             <StContentTitle>오시는길</StContentTitle>
-            <KakaoMap mapState={mapState} onClick={mapController.handleClickSetMarker}>
-              {markerController.showGeoLocationMarker()}
-              {markerController.showFestivalMarkers()}
-            </KakaoMap>
+            <KakaoMap mapState={mapState}>{markerController.showMarkers()}</KakaoMap>
             <StMap></StMap>
           </StMapBox>
         </StMain>
