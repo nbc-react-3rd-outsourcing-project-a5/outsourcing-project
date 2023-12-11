@@ -15,15 +15,24 @@
 
 #### Detail page
 : 축제명, 축제 개최일자, 축제 세부 설명 및 사진, 축제의 위치 등의 정보를 담고있는 페이지 입니다. 
+![outsourcing-project-detail](https://github.com/nbc-react-3rd-outsourcing-project-a5/outsourcing-project/assets/120929861/24631c73-5318-4e96-8c3c-88ac854f6955)
+
 
 #### Auth page
 : 일반 회원과 업체 회원으로 분류하여, 일반 회원의 경우 사이트 내에서 댓글 기능을 이용할 수 있고 업체회원의 경우 축제를 등록할 수 있습니다.
+![Login](https://github.com/nbc-react-3rd-outsourcing-project-a5/outsourcing-project/assets/120929861/17a1de1d-0142-4041-950b-dc3d4e91da48)
+
 
 #### Festival Registration page
 : 업체 회원만 축제를 등록할 수 있으며, 축제 등록 시에는 업체명, 축제 개최일자, 축제명, 축제 주소 와 설명 등을 입력해야 합니다.
+![축제 등록](https://github.com/nbc-react-3rd-outsourcing-project-a5/outsourcing-project/assets/120929861/173c71a3-e1f5-4101-9f78-361376f6c444)
+
+
 
 #### Search page
 : 설정한 기간과 지역을 토대로 필터링한 결과를 지도에 표시하고 지도에 오버레이된 창을 누르면 상세페이지로 이동합니다. 또한 필터링 초기화를 통해 검색 결과를 초기화 할 수 있습니다.
+![outsourcing-project-psi vercel app_search(desktop) (1)](https://github.com/nbc-react-3rd-outsourcing-project-a5/outsourcing-project/assets/120929861/b9c6a7ed-e116-4387-89fb-7cfc66dd7410)
+
 
 ### 기술 스택 및 사용 라이브러리
 - React
