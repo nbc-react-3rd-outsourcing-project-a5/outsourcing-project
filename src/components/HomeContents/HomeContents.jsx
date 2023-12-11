@@ -40,8 +40,15 @@ export default function HomeContents() {
     return festivals.filter((item) => {
       // 축제 각각 날짜
       const startDate = new Date(item.startDate);
-      // 축제 진행중, 진행예정
-      return isOncoming ? startDate <= today : startDate > today;
+      const endDate = new Date(item.endDate);
+
+      if (isOncoming) {
+        // (기간지난 것 제외) 진행중인 경우
+        return startDate <= today && endDate >= today;
+      } else {
+        // 진행예정인 경우
+        return endDate > today;
+      }
     });
   };
 
