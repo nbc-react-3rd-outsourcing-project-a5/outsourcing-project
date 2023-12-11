@@ -2,6 +2,7 @@ import { collection } from '@firebase/firestore';
 import { db } from 'fb/firebase';
 import { useFestival } from 'hooks';
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
@@ -80,6 +81,7 @@ export default function Carousel() {
     centerMode: true,
     autoplaySpeed: 4000,
     centerPadding: '0px',
+    draggable: false, // 드래그 막기
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />
   };
@@ -107,18 +109,20 @@ export default function Carousel() {
         {carouselFive.map((item, index) => {
           return (
             <StSliderContainer key={item.docID}>
-              <StSliderInner>
-                <StContentTitle>{item.name}</StContentTitle>
-                <StPeriod>
-                  {item.startDate} - {item.endDate}
-                </StPeriod>
-                <StLocation>{item.address}</StLocation>
-                <StSlideNumber>
-                  {index + 1}
-                  <span> / 5</span>
-                </StSlideNumber>
-                <StImg src={item.image[0].url} />
-              </StSliderInner>
+              <StLink key={item.docID} to={`/detail/${item.docID}`}>
+                <StSliderInner>
+                  <StContentTitle>{item.name}</StContentTitle>
+                  <StPeriod>
+                    {item.startDate} - {item.endDate}
+                  </StPeriod>
+                  <StLocation>{item.address}</StLocation>
+                  <StSlideNumber>
+                    {index + 1}
+                    <span> / 5</span>
+                  </StSlideNumber>
+                  <StImg src={item.image[0].url} />
+                </StSliderInner>
+              </StLink>
             </StSliderContainer>
           );
         })}
@@ -191,6 +195,7 @@ const StSliderContainer = styled.div`
   }
 `;
 
+const StLink = styled(Link)``;
 const StSliderInner = styled.div`
   position: relative;
   width: 1200px;
