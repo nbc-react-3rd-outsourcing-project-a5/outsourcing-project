@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 function KakaoOverlay({ data, onClick = null }) {
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
   return (
     <StWrap className="wrap">
       <StHeader>
@@ -11,12 +14,23 @@ function KakaoOverlay({ data, onClick = null }) {
       </StHeader>
       <StBody>
         <StImgWrap>
-          <img src="" alt="" srcset="" />
+          <img src={data.overlayImage} alt="" />
         </StImgWrap>
-        <p className="address">{data?.address || '축제 주소'}</p>
+        <p className="address">
+          <span>장소: </span>
+          {data?.address || '축제 주소'}
+        </p>
+        <p className="address">
+          <span>시작: </span>
+          {data?.startDate || '축제 주소'}
+        </p>
+        <p className="address">
+          <span>종료: </span>
+          {data?.endDate || '축제 주소'}
+        </p>
       </StBody>
       <StFooter>
-        <StLink to={'/'}>자세히 보기</StLink>
+        <StLink to={`/detail/${data.festivalId}`}>자세히 보기</StLink>
       </StFooter>
     </StWrap>
   );
@@ -30,7 +44,7 @@ const StWrap = styled.div`
   padding: 0.5rem 1rem;
   border: 3px solid #99353c;
   outline: none;
-  transform: translateY(-10px) translateX(-1px);
+  transform: translateX(-1px);
 `;
 
 const StHeader = styled.div`
@@ -61,15 +75,25 @@ const StCloseBtn = styled.button`
 `;
 const StBody = styled.div`
   overflow: hidden;
+  padding-top: 1rem;
 
   & > .address {
     font-size: 0.8rem;
     color: #888;
   }
+
+  & p {
+    margin-top: 0.5rem;
+  }
+
+  & span {
+    font-weight: bold;
+  }
 `;
 
 const StImgWrap = styled.figure`
-  width: 100%;
+  width: 60%;
+  margin: auto;
 
   & > img {
     width: 100%;

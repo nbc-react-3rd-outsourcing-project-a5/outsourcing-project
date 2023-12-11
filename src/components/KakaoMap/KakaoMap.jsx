@@ -4,24 +4,26 @@ import styled from 'styled-components';
 function KakaoMap({ mapState, children, onClick, className, mapControl = false }) {
   return (
     <StWrap className={className}>
-      <Map
-        center={mapState.center}
-        level={mapState.level} // 지도의 확대 레벨
-        style={mapState.style}
-        isPanto={mapState.isPanto}
-        draggable={mapState.draggable}
-        onClick={onClick && ((_t, mouseEvent) => onClick(_t, mouseEvent))}
-        ref={mapState.mapRef}
-      >
-        {mapControl && (
-          <>
-            <MapTypeControl position={'TOPRIGHT'} />
-            <ZoomControl position={'RIGHT'} />
-          </>
-        )}
+      {mapState?.center && (
+        <Map
+          center={mapState.center}
+          level={mapState.level} // 지도의 확대 레벨
+          style={mapState.style}
+          isPanto={mapState.isPanto}
+          draggable={mapState.draggable}
+          onClick={onClick && ((_t, mouseEvent) => onClick(_t, mouseEvent))}
+          ref={mapState.mapRef}
+        >
+          {mapControl && (
+            <>
+              <MapTypeControl position={'TOPRIGHT'} />
+              <ZoomControl position={'RIGHT'} />
+            </>
+          )}
 
-        {children && <CustomOverlayMap position={mapState.center}>{children}</CustomOverlayMap>}
-      </Map>
+          {children && <CustomOverlayMap position={mapState.center}>{children}</CustomOverlayMap>}
+        </Map>
+      )}
     </StWrap>
   );
 }

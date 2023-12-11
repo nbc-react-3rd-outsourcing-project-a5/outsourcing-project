@@ -4,28 +4,23 @@ import { useState } from 'react';
 import resetIcon from './assets/resetIcon.png';
 import { ko } from 'date-fns/locale';
 import DatePicker from 'react-datepicker';
-import regionList from 'data/regionList';
+
 import { useDate } from 'hooks';
-import { useInput } from 'hooks';
 import FormSelect from './FormSelect';
 import { collection, getDocs, where } from 'firebase/firestore';
 import { db } from 'fb/firebase';
 import { Link } from 'react-router-dom';
 import { format, isBefore } from 'date-fns';
 
-export default function SearchForm() {
+export default function SearchForm({ searchResult, setSearchResult, cityObject, regionObject, address }) {
+  const [city, onSelectCity, onResetCity] = cityObject;
+  const [regionNameList, regionList, region, onSelectRegion, onResetRegion] = regionObject;
   const [isSearching, setIsSearching] = useState(false);
-  const regionNameList = regionList.map((n) => n.name);
+
   const [startDate, handleChangeStartDate] = useDate();
   const [endDate, handleChangeEndDate] = useDate();
-  const [region, onSelectRegion, onResetRegion] = useInput(regionNameList[0]);
-  const [city, onSelectCity, onResetCity] = useInput();
-  const [searchResult, setSearchResult] = useState([]);
-  console.log(searchResult);
 
   const regionCityList = region && regionList.find((n) => n.name === region).city;
-  console.log(regionCityList);
-  const address = `${region} ${city}`;
 
   const handleResetButton = () => {
     // 날짜 필터 초기화
