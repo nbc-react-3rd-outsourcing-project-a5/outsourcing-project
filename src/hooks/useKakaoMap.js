@@ -10,7 +10,7 @@ export const useKakaoMap = () => {
   const mapRef = useRef();
   const [mapState, setMapState] = useState({
     center: {
-      lat: 33.450701,
+      lat: 20.450701,
       lng: 126.570667
     },
     level: 3,
@@ -33,7 +33,7 @@ export const useKakaoMap = () => {
   });
 
   const changeState = (object) => {
-    setMapState((prev) => ({ ...prev, object }));
+    setMapState((prev) => ({ ...prev, ...object }));
   };
 
   const handleClickGetPosition = (_t, mouseEvent) => {
@@ -48,5 +48,5 @@ export const useKakaoMap = () => {
     handleClickGetPosition
   };
 
-  return { isLoading, error, mapState, mapController };
+  return { isLoading, error, mapState, position, mapController };
 };

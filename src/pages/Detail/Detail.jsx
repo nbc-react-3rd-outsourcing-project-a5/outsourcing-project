@@ -6,7 +6,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import Comments from 'components/Comments/Comments';
-import { useFestival, useKakaoMap, useKakaoMapMarker } from 'hooks';
+import { useFestival, useGeolocation, useKakaoMap, useKakaoMapMarker } from 'hooks';
 import KakaoMap from 'components/KakaoMap/KakaoMap';
 import { toast } from 'react-toastify';
 
@@ -77,20 +77,17 @@ const Detail = () => {
   const [selectImageNum, setSelectImageNum] = useState(1);
   const { mapState, mapController } = useKakaoMap();
   const markerController = useKakaoMapMarker();
+  const position = festival.responseData.position;
+  useEffect(() => {
+    mapController.changeState({ center: position });
+  }, []);
 
   useEffect(() => {
-    //TODO : DB에서 데이터 받은거 CreateMarkers로 넘겨주기
-    // marker : {
-    //   [33,125]
-    // }
-    // createMarkers(festival.responseData.marker);
-    const test11 = [
-      {
-        title: '테스트'
-      }
-    ];
-    markerController.createFestivalMarkers(test11);
-  }, []);
+    if (position) {
+      mapController.changeState({ center: position });
+      markerController.createMarker({ position: position });
+    }
+  }, [position]);
 
   useEffect(() => {
     festival.get(id);
@@ -164,10 +161,9 @@ const Detail = () => {
           </StImgSliderBox>
           <StMapBox>
             <StContentTitle>오시는길</StContentTitle>
-            <KakaoMap mapState={mapState} onClick={mapController.handleClickSetMarker}>
-              {markerController.showGeoLocationMarker()}
-              {markerController.showFestivalMarkers()}
-            </KakaoMap>
+            {festival?.responseData.position && (
+              <KakaoMap mapState={mapState}>{markerController?.showMarkers()}</KakaoMap>
+            )}
             <StMap></StMap>
           </StMapBox>
         </StMain>

@@ -7,6 +7,7 @@ export const useKakaoMapMarker = () => {
   const geoLocationData = useGeolocation();
   const [markers, setMarkers] = useState([]);
   const [festivalmarkers, setFestivalMarkers] = useState([]);
+  const [currentLocation, setCurrentLocation] = useState(geoLocationData);
   const defaultMarkerData = {
     position: {
       lat: 33.450701,
@@ -26,6 +27,11 @@ export const useKakaoMapMarker = () => {
   const createMarkerData = (data) => {
     const initData = data ? { ...defaultMarkerData, ...data } : defaultMarkerData;
     return initData;
+  };
+
+  const createMarker = (data) => {
+    const markerData = createMarkerData(data);
+    setMarkers([markerData]);
   };
 
   const createMarkers = (array) => {
@@ -73,7 +79,6 @@ export const useKakaoMapMarker = () => {
       const copy = [...festivalmarkers];
       copy[index].isOpen = !copy[index].isOpen;
       setFestivalMarkers(copy);
-      console.log(festivalmarkers);
     };
 
     return festivalmarkers.map((n, i) => {
@@ -94,6 +99,7 @@ export const useKakaoMapMarker = () => {
 
   const markerController = {
     createMarkers,
+    createMarker,
     showMarkers,
     showGeoLocationMarker,
     createFestivalMarkers,
