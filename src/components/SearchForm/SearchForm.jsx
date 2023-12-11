@@ -17,8 +17,8 @@ export default function SearchForm() {
   const regionNameList = regionList.map((n) => n.name);
   const [startDate, handleChangeStartDate] = useDate();
   const [endDate, handleChangeEndDate] = useDate();
-  const { region, onSelectRegion, onResetRegion } = useInput(regionNameList[0]);
-  const { city, onSelectCity, onResetCity } = useInput();
+  const [region, onSelectRegion, onResetRegion] = useInput(regionNameList[0]);
+  const [city, onSelectCity, onResetCity] = useInput();
   const [searchResult, setSearchResult] = useState([]);
 
   const regionCityList = region && regionList.find((n) => n.name === region).city;
