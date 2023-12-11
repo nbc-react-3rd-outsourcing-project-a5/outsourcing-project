@@ -12,7 +12,6 @@ export const __getUsers = createAsyncThunk('getUsers', async (userId, thunkAPI) 
         ...doc.data()
       };
     });
-    // console.log(data);
     return thunkAPI.fulfillWithValue(data);
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
@@ -26,7 +25,6 @@ export const __targetUser = createAsyncThunk('targetUser', async (payload, thunk
       if (user) {
         const userEmail = user.email;
         const selectUser = userProfile.payload?.find((i) => userEmail === i.email);
-        // console.log(selectUser);
         if (selectUser) {
           thunkAPI.dispatch(checkLogin(selectUser));
           // thunkAPI.fulfillWithValue(selectUser);
@@ -64,7 +62,6 @@ const authSlice = createSlice({
       .addCase(__getUsers.fulfilled, (state, action) => {
         state.isLoading = false;
         state.users = action.payload;
-        // console.log(action.payload);
       })
       .addCase(__getUsers.rejected, (state, action) => {
         state.isLoading = false;
@@ -78,7 +75,6 @@ const authSlice = createSlice({
       // .addCase(__targetUser.fulfilled, (state, action) => {
       //   state.isLoading = false;
       //   state.users = action.payload;
-      //   // console.log(action.payload);
       // })
       .addCase(__targetUser.rejected, (state, action) => {
         state.isLoading = false;

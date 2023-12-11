@@ -14,12 +14,13 @@ import { Link } from 'react-router-dom';
 import { format, isBefore } from 'date-fns';
 
 export default function SearchForm() {
+  const regionNameList = regionList.map((n) => n.name);
   const [startDate, handleChangeStartDate] = useDate();
   const [endDate, handleChangeEndDate] = useDate();
-  const [region, onSelectRegion, onResetRegion] = useInput();
-  const [city, onSelectCity, onResetCity] = useInput();
+  const { region, onSelectRegion, onResetRegion } = useInput(regionNameList[0]);
+  const { city, onSelectCity, onResetCity } = useInput();
   const [searchResult, setSearchResult] = useState([]);
-  const regionNameList = regionList.map((n) => n.name);
+
   const regionCityList = region && regionList.find((n) => n.name === region).city;
   const address = `${region} ${city}`;
 
@@ -48,7 +49,6 @@ export default function SearchForm() {
           result.push({ id: doc.id, ...doc.data() });
         });
         setSearchResult(result);
-        console.log(result);
       } catch (error) {
         console.error('쿼리 실패: ', error);
       }
@@ -106,7 +106,7 @@ export default function SearchForm() {
             <label>지역</label>
             <div>
               <FormSelect listData={regionNameList} onChange={onSelectRegion} />
-              <FormSelect listData={regionCityList} onChange={onSelectCity} />
+              <FormSelect listData={['선택안함', ...regionCityList]} onChange={onSelectCity} />
             </div>
           </StLocation>
         </StFilterBox>
@@ -158,7 +158,6 @@ const StForm = styled.form`
   gap: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  margin: 10px;
 `;
 
 const StFilterBox = styled.div`

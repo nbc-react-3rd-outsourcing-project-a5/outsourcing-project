@@ -4,12 +4,19 @@ const color = {
 };
 
 const fontSize = {
+  sm: '0.8rem',
+  default: '1rem',
+  lg: '1.2rem'
+};
+
+const spacing = {
   default: '1rem'
 };
 
 const theme = {
   color,
-  fontSize
+  fontSize,
+  spacing
 };
 
 export default theme;

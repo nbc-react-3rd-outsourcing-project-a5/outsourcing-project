@@ -20,8 +20,6 @@ export default function Comments() {
   const handleOnchangeComments = (e) => setComments(e.target.value);
   const handleOnchangeEditComments = (e) => setEditComments(e.target.value);
   const filterComments = allComments.filter((item) => item.festivalId === id);
-  // console.log(filterComments);
-  console.log(user);
   useEffect(() => {
     if (!isLoading) {
       getDocs(query(collection(db, 'comments'), orderBy('createdAt', 'desc')))
@@ -39,7 +37,6 @@ export default function Comments() {
       setIsLoding(false);
     }
   }, []);
-  console.log(allComments);
 
   const handleSubmitComments = async (e) => {
     e.preventDefault();
@@ -87,7 +84,6 @@ export default function Comments() {
   const handleCompletionComment = async (id) => {
     try {
       const completion = { ...findComments, edit: false, comments: editComments };
-      // console.log(completion);
       const changeComment = allComments.map((item) => {
         return item.id === id ? { ...item, edit: !item.edit, comments: editComments } : item;
       });

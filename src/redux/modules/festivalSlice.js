@@ -123,8 +123,6 @@ export const festivalSlice = createSlice({
       .addCase(__createFestival.fulfilled, (state, action) => {
         state.isLoading = false;
         // TODO : 파일 생성 후 로직
-        console.log('업로드 성공');
-        console.log(action.payload);
       })
       .addCase(__createFestival.rejected, (state, action) => {
         state.isLoading = false;
@@ -149,6 +147,7 @@ export const festivalSlice = createSlice({
     builder
       .addCase(__getFestival.pending, (state) => {
         state.isLoading = true;
+        state.targetFestival = [];
       })
       .addCase(__getFestival.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -165,7 +164,6 @@ export const festivalSlice = createSlice({
       })
       .addCase(__updateFestival.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log(action.payload);
       })
       .addCase(__updateFestival.rejected, (state, action) => {
         state.isLoading = false;
@@ -178,7 +176,6 @@ export const festivalSlice = createSlice({
       })
       .addCase(__deleteFestival.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log(action.payload);
       })
       .addCase(__deleteFestival.rejected, (state, action) => {
         state.isLoading = false;
