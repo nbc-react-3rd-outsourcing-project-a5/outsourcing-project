@@ -75,6 +75,18 @@ const Detail = () => {
     prevArrow: <SamplePrevArrow />
   };
 
+  const onCopy = () => {
+    const url = window.location.href;
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        alert('현재 게시물의 주소가 복사되었습니다.');
+      })
+      .catch((err) => {
+        console.error('Something went wrong', err);
+      });
+  };
+
   return (
     <>
       <StBannerWrap>
@@ -85,7 +97,17 @@ const Detail = () => {
               {festival?.responseData.startDate} - {festival?.responseData.endDate}
             </StPeriod>
             <StContent>{festival?.responseData.description}</StContent>
-            <StShare>공유하기</StShare>
+            <StShare onClick={onCopy}>
+              <svg width="16" height="16" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  fill="#ffffff"
+                  fill-rule="evenodd"
+                  d="M5 2V1h5v1H5Zm-.25-2A.75.75 0 0 0 4 .75V1h-.5A1.5 1.5 0 0 0 2 2.5v10A1.5 1.5 0 0 0 3.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-10A1.5 1.5 0 0 0 11.5 1H11V.75a.75.75 0 0 0-.75-.75h-5.5ZM11 2v.25a.75.75 0 0 1-.75.75h-5.5A.75.75 0 0 1 4 2.25V2h-.5a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-10a.5.5 0 0 0-.5-.5H11Z"
+                  clip-rule="evenodd"
+                />
+              </svg>{' '}
+              링크 복사하기
+            </StShare>
             {festival?.responseData.image && (
               <StBannerImgWrap>
                 <StBanner src={festival?.responseData.image[selectImageNum]?.url} />
@@ -151,6 +173,13 @@ const StShare = styled.div`
   position: absolute;
   top: 0;
   right: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  & svg {
+    margin-right: 4px;
+  }
 `;
 const StBannerImgWrap = styled.div`
   display: flex;
