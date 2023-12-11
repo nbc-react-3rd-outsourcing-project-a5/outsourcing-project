@@ -8,32 +8,66 @@ import 'slick-carousel/slick/slick.css';
 import Comments from 'components/Comments/Comments';
 import { useFestival, useGeolocation, useKakaoMap, useKakaoMapMarker } from 'hooks';
 import KakaoMap from 'components/KakaoMap/KakaoMap';
+import { toast } from 'react-toastify';
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
   return (
-    <div
+    <svg
       className={className}
+      onClick={onClick}
       style={{
         ...style,
-        width: '20px',
+        width: '40px',
+        height: '40px',
         top: '50%',
-        display: 'block',
-        right: '3%'
+        right: '20px'
       }}
-      onClick={onClick}
-    />
+      width="40"
+      height="40"
+      viewBox="0 0 512 512"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill="#ffffff"
+        d="M256.25 16.042c-132.548 0-240 107.451-240 240s107.452 240 240 240s240-107.452 240-240s-107.45-240-240-240ZM403.328 403.12A207.253 207.253 0 1 1 447.917 337a207.364 207.364 0 0 1-44.589 66.12Z"
+      />
+      <path
+        fill="#ffffff"
+        d="m239.637 164.987l75.053 75.054H128.137v32H314.69l-75.053 75.054l22.627 22.627l113.681-113.681L262.264 142.36l-22.627 22.627z"
+      />
+    </svg>
   );
 }
 
 function SamplePrevArrow(props) {
   const { className, style, onClick } = props;
   return (
-    <div
+    <svg
       className={className}
-      style={{ ...style, width: '20px', top: '50%', left: '2%', display: 'block' }}
       onClick={onClick}
-    />
+      style={{
+        ...style,
+        width: '40px',
+        height: '40px',
+        top: '50%',
+        left: '20px',
+        display: 'block'
+      }}
+      width="40"
+      height="40"
+      viewBox="0 0 512 512"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill="#ffffff"
+        d="M256 16.042c-132.548 0-240 107.451-240 240s107.452 240 240 240s240-107.452 240-240s-107.452-240-240-240ZM403.078 403.12A207.253 207.253 0 1 1 447.667 337a207.364 207.364 0 0 1-44.589 66.12Z"
+      />
+      <path
+        fill="#ffffff"
+        d="m272.614 164.987l-22.628-22.627l-113.681 113.681l113.681 113.681l22.628-22.627l-75.054-75.054H385v-32H197.56l75.054-75.054z"
+      />
+    </svg>
   );
 }
 
@@ -72,6 +106,18 @@ const Detail = () => {
     prevArrow: <SamplePrevArrow />
   };
 
+  const onCopy = () => {
+    const url = window.location.href;
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        toast.success('현재 게시물 주소가 복사되었습니다.');
+      })
+      .catch((err) => {
+        console.error('Something went wrong', err);
+      });
+  };
+
   return (
     <>
       <StBannerWrap>
@@ -82,7 +128,17 @@ const Detail = () => {
               {festival?.responseData.startDate} - {festival?.responseData.endDate}
             </StPeriod>
             <StContent>{festival?.responseData.description}</StContent>
-            <StShare>공유하기</StShare>
+            <StShare onClick={onCopy}>
+              <svg width="16" height="16" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  fill="#ffffff"
+                  fill-rule="evenodd"
+                  d="M5 2V1h5v1H5Zm-.25-2A.75.75 0 0 0 4 .75V1h-.5A1.5 1.5 0 0 0 2 2.5v10A1.5 1.5 0 0 0 3.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-10A1.5 1.5 0 0 0 11.5 1H11V.75a.75.75 0 0 0-.75-.75h-5.5ZM11 2v.25a.75.75 0 0 1-.75.75h-5.5A.75.75 0 0 1 4 2.25V2h-.5a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-10a.5.5 0 0 0-.5-.5H11Z"
+                  clip-rule="evenodd"
+                />
+              </svg>{' '}
+              링크 복사하기
+            </StShare>
             {festival?.responseData.image && (
               <StBannerImgWrap>
                 <StBanner src={festival?.responseData.image[selectImageNum]?.url} />
@@ -147,6 +203,13 @@ const StShare = styled.div`
   position: absolute;
   top: 0;
   right: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  & svg {
+    margin-right: 4px;
+  }
 `;
 const StBannerImgWrap = styled.div`
   display: flex;

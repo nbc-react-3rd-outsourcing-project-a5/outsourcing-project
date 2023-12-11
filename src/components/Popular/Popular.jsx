@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Slider from 'react-slick';
-import popularData from './popularData.json';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import StContainer from 'components/common/StContainer';
@@ -110,6 +109,7 @@ export default function Popular() {
     infinite: true,
     slidesToShow: 5,
     slidesToScroll: 1,
+    draggable: false, // 드래그 막기
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />
   };

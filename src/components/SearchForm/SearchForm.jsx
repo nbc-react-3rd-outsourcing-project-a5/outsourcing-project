@@ -14,17 +14,35 @@ import { Link } from 'react-router-dom';
 import { format, isBefore } from 'date-fns';
 
 export default function SearchForm() {
+  const [isSearching, setIsSearching] = useState(false);
   const regionNameList = regionList.map((n) => n.name);
   const [startDate, handleChangeStartDate] = useDate();
   const [endDate, handleChangeEndDate] = useDate();
   const [region, onSelectRegion, onResetRegion] = useInput(regionNameList[0]);
   const [city, onSelectCity, onResetCity] = useInput();
   const [searchResult, setSearchResult] = useState([]);
+  console.log(searchResult);
 
   const regionCityList = region && regionList.find((n) => n.name === region).city;
+  console.log(regionCityList);
   const address = `${region} ${city}`;
 
+  const handleResetButton = () => {
+    // 날짜 필터 초기화
+    handleChangeStartDate(new Date());
+    handleChangeEndDate(new Date());
+
+    // 지역 필터 초기화 => 작동 X custom hook을 reset 하는 방법..
+    onResetRegion();
+    onResetCity();
+
+    // 검색 결과 초기화
+    setSearchResult([]);
+    setIsSearching(!isSearching);
+  };
+
   const onSubmit = async (e) => {
+    setIsSearching(!isSearching);
     e.preventDefault();
 
     const data = {
@@ -53,20 +71,8 @@ export default function SearchForm() {
         console.error('쿼리 실패: ', error);
       }
     };
+
     fetchData();
-  };
-
-  const handleResetButton = () => {
-    // 날짜 필터 초기화
-    handleChangeStartDate(new Date());
-    handleChangeEndDate(new Date());
-
-    // 지역 필터 초기화 => 작동 X custom hook을 reset 하는 방법..
-    onResetRegion();
-    onResetCity();
-
-    // 검색 결과 초기화
-    setSearchResult([]);
   };
 
   return (
@@ -118,10 +124,16 @@ export default function SearchForm() {
           </span>
         </StButtonWrapper>
       </StForm>
-      <StSearchResultBox>
-        {searchResult.length > 0 ? (
-          searchResult
-            .filter((item) => item.address === address)
+      {searchResult.length > 0 && (
+        <StSearchResultBox>
+          {searchResult
+            .filter((item) => {
+              if (city === '선택안함') {
+                return item.address.startsWith(region);
+              }
+
+              return item.address === address;
+            })
             .map((item) => {
               const formattedStartDate = format(item.startDate.toDate(), 'yyyy-MM-dd');
               const formattedEndDate = format(item.endDate.toDate(), 'yyyy-MM-dd');
@@ -131,6 +143,7 @@ export default function SearchForm() {
                   <Link key={item.id} to={`/detail/${item.id}`}>
                     <h2>{item.name}</h2>
                   </Link>
+                  <span className="festival-address">{item.address}</span>
                   <span className="festival-date">
                     {formattedStartDate} ~ {formattedEndDate}
                     &nbsp; &nbsp;
@@ -138,11 +151,16 @@ export default function SearchForm() {
                   </span>
                 </li>
               );
-            })
-        ) : (
-          <p style={{ textAlign: 'center' }}>검색 결과가 없습니다.</p>
-        )}
-      </StSearchResultBox>
+            })}
+        </StSearchResultBox>
+      )}
+      {isSearching ? (
+        searchResult.length === 0 ? (
+          <StNoneResultBox>
+            <p style={{ textAlign: 'center' }}>검색 결과가 없습니다.</p>
+          </StNoneResultBox>
+        ) : null
+      ) : null}
     </>
   );
 }
@@ -250,13 +268,14 @@ const StButtonWrapper = styled.div`
     margin-left: 10px;
   }
 `;
-const StSearchResultBox = styled.ul`
+const StSearchResultBox = styled.div`
   width: 100%;
-  margin: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 20px 0;
 
   & li {
     width: 100%;
-    height: 200px;
     padding: 10px;
   }
 
@@ -270,6 +289,11 @@ const StSearchResultBox = styled.ul`
     font-size: 1rem;
     margin-right: 20px;
   }
+
+  & .festival-address {
+    margin-right: 20px;
+  }
+
   & .festival-date {
     margin-right: 20px;
   }
@@ -277,4 +301,15 @@ const StSearchResultBox = styled.ul`
     font-size: 14px;
     color: #888;
   }
+`;
+
+const StNoneResultBox = styled(StSearchResultBox)`
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 20px 0;
 `;

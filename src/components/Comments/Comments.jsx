@@ -52,7 +52,7 @@ export default function Comments() {
 
     const collectionRef = collection(db, 'comments');
     const res = await addDoc(collectionRef, newComment);
-    toast.success('리뷰가 등록되었습니다!');
+    toast.success('후기가 등록되었습니다!');
     setComments('');
     setAllComments([
       {
@@ -66,7 +66,7 @@ export default function Comments() {
   const handleDeleteComment = async (id) => {
     const comments = allComments.filter((item) => item.id !== id);
 
-    if (!window.confirm('리뷰를 삭제하시겠습니까?')) return;
+    if (!window.confirm('후기를 삭제하시겠습니까?')) return;
     toast.success('삭제되었습니다.');
     const commentRef = doc(db, 'comments', id);
     await deleteDoc(commentRef);
@@ -91,9 +91,9 @@ export default function Comments() {
       await updateDoc(collectionRef, completion);
 
       setAllComments(changeComment);
-      toast.success('리뷰 수정을 완료했습니다.');
+      toast.success('후기 수정을 완료했습니다.');
     } catch (error) {
-      toast.error('리뷰 수정에 실패했습니다.');
+      toast.error('후기 수정에 실패했습니다.');
     }
   };
 
@@ -117,7 +117,7 @@ export default function Comments() {
           )}
         </form>
         {filterComments.length === 0 ? (
-          <div>아직 등록된 리뷰가 없습니다!</div>
+          <div>아직 등록된 후기가 없습니다!</div>
         ) : (
           <ul>
             {filterComments.map((item) => {
