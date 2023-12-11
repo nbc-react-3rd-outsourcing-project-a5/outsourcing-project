@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { festivalStorageRef } from 'fb/firebase';
 import { toast } from 'react-toastify';
 
 const accepted = {
@@ -38,15 +37,6 @@ export const useImageFile = () => {
 
     setImageFiles([...imageFiles, ...filesArray]);
   };
-
-  // const handleUploadStorage = async (docID) => {
-  //   const imgRef = festivalStorageRef(docID)
-  //   try {
-  //     await uploadBytes(imgRef, imgFileState.file)
-  //   } catch (error) {
-
-  //   }
-  // }
 
   return [imageFiles, handleUploadImageFiles];
 };

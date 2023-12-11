@@ -65,6 +65,7 @@ const StFixed = styled.div`
   left: 0;
   width: 100%;
   z-index: 99;
+  box-shadow: 1px 1px 10px 10px #00000017;
 `;
 const StHeader = styled.header`
   display: flex;
