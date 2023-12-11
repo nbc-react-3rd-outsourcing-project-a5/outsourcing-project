@@ -34,7 +34,6 @@ function Search() {
       return item.address === address;
     });
 
-    console.log(filteredFestival);
     if (filteredFestival) {
       const festivalMarkerData = filteredFestival.map((n) => {
         const data = {

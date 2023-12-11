@@ -80,7 +80,6 @@ export const useKakaoMapMarker = () => {
       const copy = [...festivalmarkers];
       copy[index].isOpen = !copy[index].isOpen;
       setFestivalMarkers(copy);
-      console.log(festivalmarkers);
     };
 
     return (
