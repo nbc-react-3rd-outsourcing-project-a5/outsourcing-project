@@ -71,6 +71,7 @@ export const useKakaoMapMarker = () => {
 
   const createFestivalMarkers = (array) => {
     const markersData = array.map((n) => createMarkerData({ ...n, isOpen: false }));
+
     setFestivalMarkers((prev) => [...prev, ...markersData]);
   };
 
@@ -81,20 +82,23 @@ export const useKakaoMapMarker = () => {
       setFestivalMarkers(copy);
     };
 
-    return festivalmarkers.map((n, i) => {
-      return (
-        <KakaoMapMarker data={n} key={`marker-${i}`} onClick={() => handleToggleOverlay(i, true)}>
-          {n.isOpen && (
-            <KakaoOverlay
-              data={n}
-              onClick={() => {
-                handleToggleOverlay(i, false);
-              }}
-            />
-          )}
-        </KakaoMapMarker>
-      );
-    });
+    return (
+      festivalmarkers.length > 0 &&
+      festivalmarkers.map((n, i) => {
+        return (
+          <KakaoMapMarker data={n} key={`marker-${i}`} onClick={() => handleToggleOverlay(i, true)}>
+            {n.isOpen && (
+              <KakaoOverlay
+                data={n}
+                onClick={() => {
+                  handleToggleOverlay(i, false);
+                }}
+              />
+            )}
+          </KakaoMapMarker>
+        );
+      })
+    );
   };
 
   const markerController = {
